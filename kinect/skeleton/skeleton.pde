@@ -12,6 +12,7 @@ import KinectPV2.KJoint;
 import KinectPV2.*;
 
 KinectPV2 kinect;
+Flock flock;
 
 
 float zVal = 300;
@@ -19,7 +20,7 @@ float rotX = PI;
 
 void setup() {
   size(1024, 768, P3D);
-
+  //fullScreen();
   kinect = new KinectPV2(this);
 
   kinect.enableColorImg(true);
@@ -28,12 +29,20 @@ void setup() {
   kinect.enableSkeleton3DMap(true);
 
   kinect.init();
+  
+  flock = new Flock();
+  // Add an initial set of boids into the system
+  for (int i = 0; i < 150; i++) {
+    flock.addBoid(new Boid(width/2,height/2));
+  }
+  
+  //smooth();
 }
 
 void draw() {
   background(0);
-
-  image(kinect.getColorImage(), 0, 0, 320, 240);
+  
+  image(kinect.getColorImage(), 0, 0, 160, 120);
 
   //translate the scene to the center 
   pushMatrix();
@@ -64,6 +73,7 @@ void draw() {
 
   fill(255, 0, 0);
   text(frameRate, 50, 50);
+  flock.run();
 }
 
 
@@ -127,6 +137,20 @@ void drawHandState(KJoint joint) {
   handState(joint.getState());
   strokeWeight(5.0f + joint.getZ()*8);
   point(joint.getX(), joint.getY(), joint.getZ());
+  
+  
+  PVector handLocCoord = convertToScreenCoord(joint.getX(), joint.getY());
+  //depending on hand state, attract or repel boids
+  switch(joint.getState()) {
+  case KinectPV2.HandState_Open:  
+    //repulse
+    flock.handForce(handLocCoord, 1);
+    break;
+  case KinectPV2.HandState_Closed:
+    //attract
+    flock.handForce(handLocCoord, -1);
+    break;
+  }
 }
 
 void handState(int handState) {
@@ -135,7 +159,7 @@ void handState(int handState) {
     stroke(0, 255, 0);
     break;
   case KinectPV2.HandState_Closed:
-    stroke(255, 0, 0);
+    stroke(255, 0, 0);   
     break;
   case KinectPV2.HandState_Lasso:
     stroke(0, 0, 255);
@@ -144,4 +168,16 @@ void handState(int handState) {
     stroke(100, 100, 100);
     break;
   }
+}
+
+// kinect returns from -1, 1, need to convert to width and height
+PVector convertToScreenCoord(float x, float y) {
+  PVector result = new PVector(0.0, 0.0);
+  float tempWidth = (x);
+  float tempHeight = (y + 1)/2;
+  
+  result.x = tempWidth * width;
+  result.y = (1 - tempHeight) * height;
+  
+  return result;
 }
