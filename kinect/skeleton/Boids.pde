@@ -35,8 +35,12 @@ class Boid {
   float r;
   float maxforce;    // Maximum steering force
   float maxspeed;    // Maximum speed
+  
+  float red;
+  float green;
+  float blue;
 
-    Boid(float x, float y) {
+  Boid(float x, float y) {
     acceleration = new PVector(0, 0);
 
     // This is a new PVector method not yet implemented in JS
@@ -48,7 +52,7 @@ class Boid {
 
     location = new PVector(x, y);
     r = 2.0;
-    maxspeed = 5;
+    maxspeed = 2;
     maxforce = 0.3;
   }
 
@@ -77,7 +81,7 @@ class Boid {
     PVector ali = align(boids);      // Alignment
     PVector coh = cohesion(boids);   // Cohesion
     // Arbitrarily weight these forces
-    sep.mult(1.5);
+    sep.mult(3.0);
     ali.mult(1.0);
     coh.mult(1.0);
     // Add the force vectors to acceleration
