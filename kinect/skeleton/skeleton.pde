@@ -19,7 +19,7 @@ float zVal = 300;
 float rotX = PI;
 
 void setup() {
-  size(1024, 768, P3D);
+  size(1440, 900, P3D);
   //fullScreen();
   kinect = new KinectPV2(this);
 
@@ -139,16 +139,20 @@ void drawHandState(KJoint joint) {
   point(joint.getX(), joint.getY(), joint.getZ());
   
   
-  PVector handLocCoord = convertToScreenCoord(joint.getX(), joint.getY());
+  PVector handLocCoord = convertToScreenCoord(joint.getX(), joint.getY(), joint.getZ());
+  //PVector handLocCoord = new PVector(joint.getX(), joint.getY());
   //depending on hand state, attract or repel boids
   switch(joint.getState()) {
   case KinectPV2.HandState_Open:  
     //repulse
-    flock.handForce(handLocCoord, 1);
+    //flock.handForce(handLocCoord, 1);
     break;
   case KinectPV2.HandState_Closed:
     //attract
     flock.handForce(handLocCoord, -1);
+    break;
+  case KinectPV2.HandState_Lasso:
+    //flock.addBoid(new Boid(width/2,height/2));
     break;
   }
 }
@@ -171,13 +175,14 @@ void handState(int handState) {
 }
 
 // kinect returns from -1, 1, need to convert to width and height
-PVector convertToScreenCoord(float x, float y) {
-  PVector result = new PVector(0.0, 0.0);
-  float tempWidth = (x);
+PVector convertToScreenCoord(float x, float y, float z) {
+  PVector result = new PVector(0.0, 0.0, 0.0);
+  float tempWidth = (x+1)/2;
   float tempHeight = (y + 1)/2;
   
   result.x = tempWidth * width;
   result.y = (1 - tempHeight) * height;
+  result.z = z;
   
   return result;
 }
