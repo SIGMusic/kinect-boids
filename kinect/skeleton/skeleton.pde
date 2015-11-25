@@ -19,7 +19,7 @@ float zVal = 300;
 float rotX = PI;
 
 void setup() {
-  size(1440, 900, P3D);
+  size(800, 600, P3D);
   //fullScreen();
   kinect = new KinectPV2(this);
 
@@ -32,11 +32,34 @@ void setup() {
   
   flock = new Flock();
   // Add an initial set of boids into the system
-  for (int i = 0; i < 150; i++) {
+  for (int i = 0; i < 50; i++) {
     flock.addBoid(new Boid(width/2,height/2));
   }
   
   //smooth();
+}
+
+boolean held = false;
+
+void mouseDragged() {
+  //print("hi");
+  PVector loc = new PVector(mouseX, mouseY, 0);
+  flock.handForce(loc, -1);
+}
+
+void mousePressed() {
+  //print("hi");
+  PVector loc = new PVector(mouseX, mouseY, 0);
+  if (held) {
+    flock.handForce(loc, -1);
+  }
+  else {
+     held = true; 
+  }
+}
+
+void mouseReleased() {
+  held = false;
 }
 
 void draw() {
@@ -51,6 +74,11 @@ void draw() {
   rotateX(rotX);
 
   ArrayList<KSkeleton> skeletonArray =  kinect.getSkeleton3d();
+
+  PVector loc = new PVector(mouseX, mouseY, 0);
+  if (held) {
+    flock.handForce(loc, -1);
+  }
 
   //individual JOINTS
   for (int i = 0; i < skeletonArray.size(); i++) {
