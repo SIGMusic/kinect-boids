@@ -65,7 +65,7 @@ void mouseReleased() {
 void draw() {
   background(0);
   
-  image(kinect.getColorImage(), 0, 0, 160, 120);
+  //image(kinect.getColorImage(), 0, 0, 160, 120);
 
   //translate the scene to the center 
   pushMatrix();
@@ -100,7 +100,7 @@ void draw() {
 
 
   fill(255, 0, 0);
-  text(frameRate, 50, 50);
+  //text(frameRate, 50, 50);
   flock.run();
 }
 
@@ -142,6 +142,7 @@ void drawBody(KJoint[] joints) {
 
   drawJoint(joints, KinectPV2.JointType_HandTipLeft);
   drawJoint(joints, KinectPV2.JointType_HandTipRight);
+  drawLine(joints, KinectPV2.JointType_HandTipLeft, KinectPV2.JointType_HandTipRight);
   //drawJoint(joints, KinectPV2.JointType_FootLeft);
   //drawJoint(joints, KinectPV2.JointType_FootRight);
 
@@ -161,6 +162,12 @@ void drawBone(KJoint[] joints, int jointType1, int jointType2) {
   point(joints[jointType2].getX(), joints[jointType2].getY(), joints[jointType2].getZ());
 }
 
+void drawLine(KJoint[] joints, int jointType1, int jointType2) {
+  strokeWeight(.01);
+  stroke(255);
+  line(joints[jointType1].getX(), joints[jointType1].getY(), joints[jointType2].getX(), joints[jointType2].getY());
+}
+
 void drawHandState(KJoint joint) {
   handState(joint.getState());
   strokeWeight(5.0f + joint.getZ()*8);
@@ -177,7 +184,7 @@ void drawHandState(KJoint joint) {
     break;
   case KinectPV2.HandState_Closed:
     //attract
-    flock.handForce(handLocCoord, -1);
+    //flock.handForce(handLocCoord, -1);
     break;
   case KinectPV2.HandState_Lasso:
     //flock.addBoid(new Boid(width/2,height/2));
