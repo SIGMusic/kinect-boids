@@ -73,7 +73,7 @@ void draw() {
   input.drawInput();
 
   fill(255, 0, 0);
-  //text(frameRate, 50, 50);
+  text(frameRate, 50, 50);
   
   PVector loc = new PVector(mouseX, mouseY, 0);
   if (held) {
