@@ -33,9 +33,11 @@ void setup() {
   flock = new Flock();
   // Add an initial set of boids into the system
   for (int i = 0; i < 50; i++) {
-    flock.addBoid(new Boid(width/2,height/2));
+    flock.addBoid(new Boid(width/2, height/2, i));
   }
   
+  
+  setupOsc();
   //smooth();
 }
 
@@ -48,6 +50,7 @@ void mouseDragged() {
 }
 
 void mousePressed() {
+  
   //print("hi");
   PVector loc = new PVector(mouseX, mouseY, 0);
   if (held) {
@@ -100,7 +103,7 @@ void draw() {
 
 
   fill(255, 0, 0);
-  //text(frameRate, 50, 50);
+  text(frameRate, 50, 50);
   flock.run();
 }
 

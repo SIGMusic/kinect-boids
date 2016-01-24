@@ -18,7 +18,18 @@ class Flock {
           KJoint[] joints = skeleton.getJoints();
     
           boolean collides = b.checkCollision(joints, KinectPV2.JointType_HandTipLeft, KinectPV2.JointType_HandTipRight);
-      
+          if (collides) {
+             OscMessage msg = new OscMessage("/collision");
+             msg.add(b.id);
+             //location of boid
+             msg.add(b.location.x);
+             msg.add(b.location.y);
+             
+             float linelen = dist(joints[KinectPV2.JointType_HandTipLeft].getX(), joints[KinectPV2.JointType_HandTipLeft].getY(), joints[KinectPV2.JointType_HandTipRight].getX(), joints[KinectPV2.JointType_HandTipRight].getY());
+
+             msg.add(linelen);
+             sendOSCMessage(msg);
+          }
         }
       }
     }
@@ -53,7 +64,9 @@ class Boid {
   float green;
   float blue;
 
-  Boid(float x, float y) {
+  int id;
+
+  Boid(float x, float y, int id) {
     acceleration = new PVector(0, 0);
 
     // This is a new PVector method not yet implemented in JS
@@ -279,7 +292,4 @@ class Boid {
     return false;
   }
   
-  void sendOSC() {
-    OscMessage msg = new OscMessage("/kinect");
-  }
 }
