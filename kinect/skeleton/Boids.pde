@@ -11,27 +11,7 @@ class Flock {
     for (Boid b : boids) {
       b.run(boids);  // Passing the entire list of boids to each boid individually
       
-      ArrayList<KSkeleton> skeletonArray =  kinect.getSkeleton3d();
-      for (int i = 0; i < skeletonArray.size(); i++) {
-        KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
-        if (skeleton.isTracked()) {
-          KJoint[] joints = skeleton.getJoints();
-    
-          boolean collides = b.checkCollision(joints, KinectPV2.JointType_HandTipLeft, KinectPV2.JointType_HandTipRight);
-          if (collides) {
-             OscMessage msg = new OscMessage("/collision");
-             msg.add(b.id);
-             //location of boid
-             msg.add(b.location.x);
-             msg.add(b.location.y);
-             
-             float linelen = dist(joints[KinectPV2.JointType_HandTipLeft].getX(), joints[KinectPV2.JointType_HandTipLeft].getY(), joints[KinectPV2.JointType_HandTipRight].getX(), joints[KinectPV2.JointType_HandTipRight].getY());
-
-             msg.add(linelen);
-             sendOSCMessage(msg);
-          }
-        }
-      }
+      input.collision(b);
     }
     
 
