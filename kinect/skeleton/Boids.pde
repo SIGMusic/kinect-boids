@@ -10,7 +10,11 @@ class Flock {
   void run() {
     for (Boid b : boids) {
       b.run(boids);  // Passing the entire list of boids to each boid individually
+      
+      input.collision(b);
     }
+    
+
   }
 
   void handForce(PVector target, int dir) {
@@ -40,7 +44,9 @@ class Boid {
   float green;
   float blue;
 
-  Boid(float x, float y) {
+  int id;
+
+  Boid(float x, float y, int id) {
     acceleration = new PVector(0, 0);
 
     // This is a new PVector method not yet implemented in JS
@@ -58,6 +64,8 @@ class Boid {
 
   void run(ArrayList<Boid> boids) {
     flock(boids);
+    
+    
     
     //walls
     //acceleration.add(PVector.mult(avoid(new PVector(location.x,height,location.z),true),5));
@@ -249,4 +257,19 @@ class Boid {
       return new PVector(0, 0);
     }
   }
+  
+  boolean checkCollision(KJoint[] joints, int joint1, int joint2) {
+    float d1 = dist(location.x, location.y, joints[joint1].getX(), joints[joint1].getY());
+    float d2 = dist(location.x, location.y, joints[joint2].getX(), joints[joint2].getY());
+    
+    float linelen = dist(joints[joint1].getX(), joints[joint1].getY(), joints[joint2].getX(), joints[joint2].getY());
+    
+    float tolerance = 0.1;
+    
+    if(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance) {
+       return true; 
+    }
+    return false;
+  }
+  
 }
