@@ -13,7 +13,10 @@ class KeyboardInput extends Input{
   }
   
   void collision(Boid b){
-    sendCollisionMsg(b, x1, y1, x2, y2);
+    boolean collides = b.checkCollision(x1, y1, x2, y2);
+    if (collides) {
+       sendCollisionMsg(b, x1, y1, x2, y2);
+    }
   }
   
   void drawInput() {

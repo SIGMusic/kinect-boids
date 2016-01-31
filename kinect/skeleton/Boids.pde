@@ -264,7 +264,26 @@ class Boid {
     }
   }
   
-  boolean checkCollision(float x1, float y1, float x2, float y2) {
+  boolean checkCollision(KJoint[] joints, int joint1, int joint2) {
+    float d1 = dist(location.x, location.y, joints[joint1].getX(), joints[joint1].getY());
+    float d2 = dist(location.x, location.y, joints[joint2].getX(), joints[joint2].getY());
+    
+    float linelen = dist(joints[joint1].getX(), joints[joint1].getY(), joints[joint2].getX(), joints[joint2].getY());
+    
+    float tolerance = 0.1;
+    
+    if(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance && !isColliding) {
+       // set to colliding so we don't get multiple osc messages
+       isColliding = !isColliding;
+       return true; 
+    }
+    
+    // not colliding anymore
+    isColliding = !isColliding;
+    return false;
+  }
+  
+  boolean checkCollision(int x1, int y1, int x2, int y2) {
     float d1 = dist(location.x, location.y, x1, y1);
     float d2 = dist(location.x, location.y, x2, y2);
     
