@@ -8,6 +8,7 @@ class Flock {
   }
 
   void run() {
+       //println(boid_collisions.size());
     for (Boid b : boids) {
       b.run(boids);  // Passing the entire list of boids to each boid individually
       
@@ -31,7 +32,7 @@ class Flock {
 
 // The Boid class
 
-class Boid {
+class Boid implements Comparable<Boid> {
 
   PVector location;
   PVector velocity;
@@ -75,6 +76,13 @@ class Boid {
       green = int(random(2)) * 255.0;
       blue  = int(random(2)) * 255.0;
     }
+  }
+  
+  @Override
+  public int compareTo(Boid b) {
+    if (location.x > b.location.x){return 1;}
+    if (location.x < b.location.x){return -1;}
+    return 0;
   }
 
   void run(ArrayList<Boid> boids) {
@@ -305,13 +313,18 @@ class Boid {
     
     float linelen = dist(x1, y1, x2, y2);
     
-    float tolerance = 0.1;
+    float tolerance = 1;
     
     if(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance && !isColliding) {
-       isColliding = !isColliding;
+       isColliding = true;
+       boid_collisions.add(this);
        return true; 
     }
-    isColliding = !isColliding;
+    if(!(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance)) {
+       boid_collisions.remove(this);
+    }
+    
+    isColliding = false;
     return false;
   }
   
