@@ -70,7 +70,9 @@ class Boid implements Comparable<Boid> {
   
   @Override
   public int compareTo(Boid b) {
-    return int(location.x > b.location.x);
+    if (location.x > b.location.x){return 1;}
+    if (location.x < b.location.x){return -1;}
+    return 0;
   }
 
   void run(ArrayList<Boid> boids) {
