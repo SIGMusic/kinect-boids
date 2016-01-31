@@ -2,7 +2,7 @@
 class KeyboardInput extends Input{
   
   int x1, x2, y1, y2;
-  boolean kW, kA, kS, kD, kLeft, kRight, kUp, kDown;
+  boolean kW, kA, kS, kD, kQ, kLeft, kRight, kUp, kDown;
   final int vel = 2;
   
   KeyboardInput(){
@@ -13,7 +13,19 @@ class KeyboardInput extends Input{
   }
   
   void collision(Boid b){
-  
+    boolean collides = b.checkCollision(x1, y1, x2, y2);
+    if (collides) {
+       OscMessage msg = new OscMessage("/collision");
+       msg.add(b.id);
+       //location of boid
+       msg.add(b.location.x);
+       msg.add(b.location.y);
+       
+       float linelen = dist(x1, y1, x2, y2);
+
+       msg.add(linelen);
+       sendOSCMessage(msg);
+    }
   }
   
   void drawInput() {
@@ -71,6 +83,11 @@ class KeyboardInput extends Input{
     case 'd':
       kD = true;
       break;
+      
+    case 'q':
+      kQ = true;
+      break;
+      
     case CODED:
       switch(keyCode){
       case LEFT:
@@ -104,6 +121,11 @@ class KeyboardInput extends Input{
     case 'd':
       kD = false;
       break;
+      
+    case 'q':
+      kQ = false;
+      break;
+      
     case CODED:
       switch(keyCode){
       case LEFT:

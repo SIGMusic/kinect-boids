@@ -19,14 +19,14 @@ float zVal = 300;
 float rotX = PI;
 
 void setup() {
-  size(800, 600, P3D);
+  size(1280, 1024, P3D);
   //fullScreen();
   
   input = new KeyboardInput();//KinectInput(this);
   
   flock = new Flock();
   // Add an initial set of boids into the system
-  for (int i = 0; i < 50; i++) {
+  for (int i = 0; i < 100; i++) {
     flock.addBoid(new Boid(width/2, height/2, i));
   }
   

@@ -46,6 +46,9 @@ class Boid {
 
   int id;
 
+  // used as a time buffer 
+  boolean isColliding;
+
   Boid(float x, float y, int id) {
     acceleration = new PVector(0, 0);
 
@@ -57,9 +60,11 @@ class Boid {
     velocity = new PVector(cos(angle), sin(angle));
 
     location = new PVector(x, y);
-    r = 2.0;
-    maxspeed = 2;
+    r = 5.0;
+    maxspeed = 3;
     maxforce = 0.3;
+    
+    isColliding = false;
   }
 
   void run(ArrayList<Boid> boids) {
@@ -266,9 +271,30 @@ class Boid {
     
     float tolerance = 0.1;
     
-    if(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance) {
+    if(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance && !isColliding) {
+       // set to colliding so we don't get multiple osc messages
+       isColliding = !isColliding;
        return true; 
     }
+    
+    // not colliding anymore
+    isColliding = !isColliding;
+    return false;
+  }
+  
+  boolean checkCollision(int x1, int y1, int x2, int y2) {
+    float d1 = dist(location.x, location.y, x1, y1);
+    float d2 = dist(location.x, location.y, x2, y2);
+    
+    float linelen = dist(x1, y1, x2, y2);
+    
+    float tolerance = 0.1;
+    
+    if(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance && !isColliding) {
+       isColliding = !isColliding;
+       return true; 
+    }
+    isColliding = !isColliding;
     return false;
   }
   
