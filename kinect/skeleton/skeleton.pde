@@ -12,6 +12,7 @@ import KinectPV2.KJoint;
 import KinectPV2.*;
 
 Flock flock;
+Flock big_flock;
 Input input;
 
 
@@ -25,11 +26,20 @@ void setup() {
   input = new KeyboardInput();//KinectInput(this);
   
   flock = new Flock();
-  // Add an initial set of boids into the system
-  for (int i = 0; i < 100; i++) {
-    flock.addBoid(new Boid(width/2, height/2, i));
-  }
+  big_flock = new Flock();
   
+  // Set the number of each size we want
+  int numSmall = 100;
+  int numBig = 10;
+  int i;
+  // Add an initial set of boids into the system
+  for (i = 0; i < numSmall; i++) {
+    flock.addBoid(new Boid(width/2, height/2, i, 5));
+  }
+  // Add an initial set of boids into the system
+  for (i = numSmall; i < numSmall+numBig; i++) {
+    big_flock.addBoid(new Boid(width/2, height/2, i, 15));
+  }
   
   setupOsc();
   //smooth();
@@ -81,4 +91,5 @@ void draw() {
   }
   
   flock.run();
+  big_flock.run();
 }
