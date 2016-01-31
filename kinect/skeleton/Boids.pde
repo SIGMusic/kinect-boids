@@ -8,14 +8,11 @@ class Flock {
   }
 
   void run() {
-       //println(boid_collisions.size());
     for (Boid b : boids) {
       b.run(boids);  // Passing the entire list of boids to each boid individually
       
       input.collision(b);
     }
-    
-
   }
 
   void handForce(PVector target, int dir) {
@@ -259,6 +256,9 @@ class Boid implements Comparable<Boid> {
     for (Boid other : boids) {
       float d = PVector.dist(location, other.location);
       if ((d > 0) && (d < neighbordist)) {
+        // draw lines to show which boids are in the same flock
+        stroke(153, 100);
+        line(location.x, location.y, other.location.x, other.location.y);
         sum.add(other.location); // Add location
         count++;
       }
