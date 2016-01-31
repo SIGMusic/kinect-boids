@@ -15,16 +15,7 @@ class KeyboardInput extends Input{
   void collision(Boid b){
     boolean collides = b.checkCollision(x1, y1, x2, y2);
     if (collides) {
-       OscMessage msg = new OscMessage("/collision");
-       msg.add(b.id);
-       //location of boid
-       msg.add(b.location.x);
-       msg.add(b.location.y);
-       
-       float linelen = dist(x1, y1, x2, y2);
-
-       msg.add(linelen);
-       sendOSCMessage(msg);
+       sendCollisionMsg(b, x1, y1, x2, y2);
     }
   }
   
