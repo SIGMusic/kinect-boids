@@ -11,16 +11,22 @@ Thomas Sanchez Lengeling.
 import KinectPV2.KJoint;
 import KinectPV2.*;
 
+// Set the number of each size we want
+  int numSmall = 50;
+  int numBig = 1;
+
 Flock flock;
 Flock big_flock;
 Input input;
 
 
+ArrayList<Boid> boid_collisions;
+
 float zVal = 300;
 float rotX = PI;
 
 void setup() {
-  size(1280, 1024, P3D);
+  size(800, 600, P3D);
   //fullScreen();
   
   input = new KeyboardInput();//KinectInput(this);
@@ -28,9 +34,9 @@ void setup() {
   flock = new Flock();
   big_flock = new Flock();
   
-  // Set the number of each size we want
-  int numSmall = 100;
-  int numBig = 10;
+  boid_collisions = new ArrayList<Boid>();
+  
+  
   int i;
   // Add an initial set of boids into the system
   for (i = 0; i < numSmall; i++) {
@@ -89,6 +95,7 @@ void draw() {
   if (held) {
     flock.handForce(loc, -1);
   }
+  
   
   flock.run();
   big_flock.run();
