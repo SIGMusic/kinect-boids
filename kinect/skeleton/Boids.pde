@@ -65,6 +65,16 @@ class Boid {
     maxforce = 0.2;
     this.id = id;
     isColliding = false;
+    
+    red = 0;
+    green = 0;
+    blue = 0;
+    while(red<1 && green<1 && blue<1)
+    {
+      red   = int(random(2)) * 255.0;
+      green = int(random(2)) * 255.0;
+      blue  = int(random(2)) * 255.0;
+    }
   }
 
   void run(ArrayList<Boid> boids) {
@@ -137,9 +147,9 @@ class Boid {
     float theta = velocity.heading2D() + radians(90);
     // heading2D() above is now heading() but leaving old syntax until Processing.js catches up
     
-    fill(200, 100);
+    fill(red, green, blue, 100);
     strokeWeight(1);
-    stroke(255);
+    stroke(red, green, blue);
     pushMatrix();
     translate(location.x, location.y);
     rotate(theta);
@@ -149,6 +159,28 @@ class Boid {
     vertex(r, r*2);
     endShape();
     popMatrix();
+  }
+  
+  // returns how similar two colors are centered at 0
+  // negative is more similar
+  private float getColorDiff(Boid other){
+    /*float dist = -1.0;
+    if(abs(red - other.red)>1)
+      dist+=0.5;
+    if(abs(green - other.green)>1)
+      dist+=0.5;
+    if(abs(blue - other.blue)>1)
+      dist+=0.5;
+    if(dist>-0.6)
+      dist+=0.5;*/
+    float dist = -1.0;
+    if(abs(red - other.red)>1)
+      dist=1.0;
+    if(abs(green - other.green)>1)
+      dist=1.0;
+    if(abs(blue - other.blue)>1)
+      dist=1.0;
+    return dist;
   }
 
   // Wraparound
@@ -187,6 +219,7 @@ class Boid {
         PVector diff = PVector.sub(location, other.location);
         diff.normalize();
         diff.div(d);        // Weight by distance
+        diff.mult(0.8 + getColorDiff(other)*0.5);        // Weight by color
         steer.add(diff);
         count++;            // Keep track of how many
       }
@@ -220,7 +253,8 @@ class Boid {
     for (Boid other : boids) {
       float d = PVector.dist(location, other.location);
       if ((d > 0) && (d < neighbordist)) {
-        sum.add(other.velocity);
+        PVector vel = PVector.mult(other.velocity, 0.7 - getColorDiff(other)*0.5);     // Weight by color
+        sum.add(vel);
         count++;
       }
     }
@@ -251,7 +285,8 @@ class Boid {
     for (Boid other : boids) {
       float d = PVector.dist(location, other.location);
       if ((d > 0) && (d < neighbordist)) {
-        sum.add(other.location); // Add location
+        PVector loc = PVector.mult(other.location, 1.0);// - getColorDiff(other)*0.5);     // Weight by color
+        sum.add(loc); // Add location
         count++;
       }
     }
