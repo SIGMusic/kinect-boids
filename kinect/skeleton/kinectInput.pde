@@ -24,10 +24,7 @@ class KinectInput extends Input{
       if (skeleton.isTracked()) {
         KJoint[] joints = skeleton.getJoints();
   
-        boolean collides = b.checkCollision(joints, KinectPV2.JointType_HandTipLeft, KinectPV2.JointType_HandTipRight);
-        if (collides) {
-           sendCollisionMsg(b, joints[KinectPV2.JointType_HandTipLeft].getX(), joints[KinectPV2.JointType_HandTipLeft].getY(), joints[KinectPV2.JointType_HandTipRight].getX(), joints[KinectPV2.JointType_HandTipRight].getY());
-        }
+        sendCollisionMsg(b, joints[KinectPV2.JointType_HandTipLeft].getX(), joints[KinectPV2.JointType_HandTipLeft].getY(), joints[KinectPV2.JointType_HandTipRight].getX(), joints[KinectPV2.JointType_HandTipRight].getY());
       }
     }
   }
