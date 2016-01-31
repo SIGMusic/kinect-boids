@@ -49,7 +49,7 @@ class Boid {
   // used as a time buffer 
   boolean isColliding;
 
-  Boid(float x, float y, int id) {
+  Boid(float x, float y, int id, int r) {
     acceleration = new PVector(0, 0);
 
     // This is a new PVector method not yet implemented in JS
@@ -60,10 +60,10 @@ class Boid {
     velocity = new PVector(cos(angle), sin(angle));
 
     location = new PVector(x, y);
-    r = 5.0;
+    this.r = r;
     maxspeed = 3;
-    maxforce = 0.3;
-    
+    maxforce = 0.2;
+    this.id = id;
     isColliding = false;
   }
 
@@ -174,7 +174,8 @@ class Boid {
   // Separation
   // Method checks for nearby boids and steers away
   PVector separate (ArrayList<Boid> boids) {
-    float desiredseparation = 25.0f;
+    // separation based on size
+    float desiredseparation = 4f*r;
     PVector steer = new PVector(0, 0, 0);
     int count = 0;
     // For every boid in the system, check if it's too close
