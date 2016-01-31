@@ -23,27 +23,35 @@ class KeyboardInput extends Input{
     stroke(255);
     strokeWeight(2);
     
-    Collections.sort(boid_collisions);
+    // remove if want to use multiple boid collisions
+    //Collections.sort(boid_collisions);
     
     float prev_x = x1;
     float prev_y = y1;
-    //if (boid_collisions.size() != 0) {
-    //  for (Boid b : boid_collisions) {
-    //    line(prev_x, prev_y, b.location.x, b.location.y);
-    //    prev_x = b.location.x;
-    //    prev_y = b.location.y;
-    //  }
-    //}
     
+    // with lines
+    //if (boid_collisions.size() != 0) {
+    // for (Boid b : boid_collisions) {
+    //   line(prev_x, prev_y, b.location.x, b.location.y);
+    //   prev_x = b.location.x;
+    //   prev_y = b.location.y;
+    // }
+    //}
+    //line(prev_x, prev_y, x2, y2);
     //line(prev_x,prev_y,x2,y2);
+    
+    
+    // with curves
     noFill();
     beginShape();
     curveVertex(prev_x, prev_y); // the first control point
     curveVertex(prev_x, prev_y);
     if (boid_collisions.size() != 0) {
-       for( Boid b : boid_collisions) {
-          curveVertex(b.location.x, b.location.y); 
-       }
+      Boid b = boid_collisions.get(0);
+      // this is commented out to only pluck using the first boid that collides
+      //for( Boid b : boid_collisions) {
+         curveVertex(b.location.x, b.location.y); 
+      //}
     }
     curveVertex(x2, y2); 
     curveVertex(x2, y2); // is also the last control point
