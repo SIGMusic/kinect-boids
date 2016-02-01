@@ -8,14 +8,11 @@ class Flock {
   }
 
   void run() {
-       //println(boid_collisions.size());
     for (Boid b : boids) {
       b.run(boids);  // Passing the entire list of boids to each boid individually
       
       input.collision(b);
     }
-    
-
   }
 
   void handForce(PVector target, int dir) {
@@ -86,8 +83,11 @@ class Boid implements Comparable<Boid> {
   }
 
   void run(ArrayList<Boid> boids) {
-    flock(boids);
     
+    update();
+    borders();
+    render();
+    flock(boids);
     
     
     //walls
@@ -96,9 +96,7 @@ class Boid implements Comparable<Boid> {
     //acceleration.add(PVector.mult(avoid(new PVector(width,location.y,location.z),true),5));
     //acceleration.add(PVector.mult(avoid(new PVector(0,location.y,location.z),true),5));
 
-    update();
-    borders();
-    render();
+    
   }
 
   void applyForce(PVector force) {
@@ -113,7 +111,7 @@ class Boid implements Comparable<Boid> {
     PVector coh = cohesion(boids);   // Cohesion
     // Arbitrarily weight these forces
     sep.mult(3.0);
-    ali.mult(1.0);
+    ali.mult(2.0);
     coh.mult(1.0);
     // Add the force vectors to acceleration
     applyForce(sep);
@@ -293,8 +291,16 @@ class Boid implements Comparable<Boid> {
     for (Boid other : boids) {
       float d = PVector.dist(location, other.location);
       if ((d > 0) && (d < neighbordist)) {
+        // draw lines to show which boids are in the same flock
+        if(showFlockLines){
+          stroke(100, 100);
+          line(location.x, location.y, other.location.x, other.location.y);
+        }
+        sum.add(other.location); // Add location
+
         PVector loc = PVector.mult(other.location, 1.0);// - getColorDiff(other)*0.5);     // Weight by color
         sum.add(loc); // Add location
+
         count++;
       }
     }

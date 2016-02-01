@@ -107,7 +107,6 @@ class KeyboardInput extends Input{
       break;
       
     case 'q':
-      print(boid_collisions);
       kQ = true;
       break;
       
@@ -146,6 +145,7 @@ class KeyboardInput extends Input{
       break;
       
     case 'q':
+      showFlockLines = !showFlockLines;
       kQ = false;
       break;
       

@@ -12,14 +12,14 @@ import KinectPV2.KJoint;
 import KinectPV2.*;
 
 // Set the number of each size we want
-  int numSmall = 50;
-  int numBig = 1;
+  int numSmall = 100;
+  int numBig = 10;
 
 Flock flock;
 Flock big_flock;
 Input input;
 
-
+boolean showFlockLines;
 ArrayList<Boid> boid_collisions;
 
 float zVal = 300;
