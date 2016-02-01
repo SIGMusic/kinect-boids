@@ -73,8 +73,11 @@ class Boid implements Comparable<Boid> {
   }
 
   void run(ArrayList<Boid> boids) {
-    flock(boids);
     
+    update();
+    borders();
+    render();
+    flock(boids);
     
     
     //walls
@@ -83,9 +86,7 @@ class Boid implements Comparable<Boid> {
     //acceleration.add(PVector.mult(avoid(new PVector(width,location.y,location.z),true),5));
     //acceleration.add(PVector.mult(avoid(new PVector(0,location.y,location.z),true),5));
 
-    update();
-    borders();
-    render();
+    
   }
 
   void applyForce(PVector force) {
@@ -100,7 +101,7 @@ class Boid implements Comparable<Boid> {
     PVector coh = cohesion(boids);   // Cohesion
     // Arbitrarily weight these forces
     sep.mult(3.0);
-    ali.mult(1.0);
+    ali.mult(2.0);
     coh.mult(1.0);
     // Add the force vectors to acceleration
     applyForce(sep);
@@ -257,8 +258,10 @@ class Boid implements Comparable<Boid> {
       float d = PVector.dist(location, other.location);
       if ((d > 0) && (d < neighbordist)) {
         // draw lines to show which boids are in the same flock
-        stroke(153, 100);
-        line(location.x, location.y, other.location.x, other.location.y);
+        if(showFlockLines){
+          stroke(100, 100);
+          line(location.x, location.y, other.location.x, other.location.y);
+        }
         sum.add(other.location); // Add location
         count++;
       }

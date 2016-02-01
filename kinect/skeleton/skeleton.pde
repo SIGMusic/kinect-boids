@@ -19,7 +19,7 @@ Flock flock;
 Flock big_flock;
 Input input;
 
-
+boolean showFlockLines;
 ArrayList<Boid> boid_collisions;
 
 float zVal = 300;
