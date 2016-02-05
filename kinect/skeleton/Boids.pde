@@ -8,14 +8,11 @@ class Flock {
   }
 
   void run() {
-       //println(boid_collisions.size());
     for (Boid b : boids) {
       b.run(boids);  // Passing the entire list of boids to each boid individually
       
       input.collision(b);
     }
-    
-
   }
 
   void handForce(PVector target, int dir) {
@@ -66,6 +63,16 @@ class Boid implements Comparable<Boid> {
     maxforce = 0.2;
     this.id = id;
     isColliding = false;
+    
+    red = 0;
+    green = 0;
+    blue = 0;
+    while(red<1 && green<1 && blue<1)
+    {
+      red   = int(random(2)) * 255.0;
+      green = int(random(2)) * 255.0;
+      blue  = int(random(2)) * 255.0;
+    }
   }
   
   @Override
@@ -76,8 +83,11 @@ class Boid implements Comparable<Boid> {
   }
 
   void run(ArrayList<Boid> boids) {
-    flock(boids);
     
+    update();
+    borders();
+    render();
+    flock(boids);
     
     
     //walls
@@ -86,9 +96,7 @@ class Boid implements Comparable<Boid> {
     //acceleration.add(PVector.mult(avoid(new PVector(width,location.y,location.z),true),5));
     //acceleration.add(PVector.mult(avoid(new PVector(0,location.y,location.z),true),5));
 
-    update();
-    borders();
-    render();
+    
   }
 
   void applyForce(PVector force) {
@@ -103,7 +111,7 @@ class Boid implements Comparable<Boid> {
     PVector coh = cohesion(boids);   // Cohesion
     // Arbitrarily weight these forces
     sep.mult(3.0);
-    ali.mult(1.0);
+    ali.mult(2.0);
     coh.mult(1.0);
     // Add the force vectors to acceleration
     applyForce(sep);
@@ -145,9 +153,9 @@ class Boid implements Comparable<Boid> {
     float theta = velocity.heading2D() + radians(90);
     // heading2D() above is now heading() but leaving old syntax until Processing.js catches up
     
-    fill(200, 100);
+    fill(red, green, blue, 100);
     strokeWeight(1);
-    stroke(255);
+    stroke(red, green, blue);
     pushMatrix();
     translate(location.x, location.y);
     rotate(theta);
@@ -157,6 +165,28 @@ class Boid implements Comparable<Boid> {
     vertex(r, r*2);
     endShape();
     popMatrix();
+  }
+  
+  // returns how similar two colors are centered at 0
+  // negative is more similar
+  private float getColorDiff(Boid other){
+    /*float dist = -1.0;
+    if(abs(red - other.red)>1)
+      dist+=0.5;
+    if(abs(green - other.green)>1)
+      dist+=0.5;
+    if(abs(blue - other.blue)>1)
+      dist+=0.5;
+    if(dist>-0.6)
+      dist+=0.5;*/
+    float dist = -1.0;
+    if(abs(red - other.red)>1)
+      dist=1.0;
+    if(abs(green - other.green)>1)
+      dist=1.0;
+    if(abs(blue - other.blue)>1)
+      dist=1.0;
+    return dist;
   }
 
   // Wraparound
@@ -195,6 +225,7 @@ class Boid implements Comparable<Boid> {
         PVector diff = PVector.sub(location, other.location);
         diff.normalize();
         diff.div(d);        // Weight by distance
+        diff.mult(0.8 + getColorDiff(other)*0.5);        // Weight by color
         steer.add(diff);
         count++;            // Keep track of how many
       }
@@ -228,7 +259,8 @@ class Boid implements Comparable<Boid> {
     for (Boid other : boids) {
       float d = PVector.dist(location, other.location);
       if ((d > 0) && (d < neighbordist)) {
-        sum.add(other.velocity);
+        PVector vel = PVector.mult(other.velocity, 0.7 - getColorDiff(other)*0.5);     // Weight by color
+        sum.add(vel);
         count++;
       }
     }
@@ -259,7 +291,16 @@ class Boid implements Comparable<Boid> {
     for (Boid other : boids) {
       float d = PVector.dist(location, other.location);
       if ((d > 0) && (d < neighbordist)) {
+        // draw lines to show which boids are in the same flock
+        if(showFlockLines){
+          stroke(100, 100);
+          line(location.x, location.y, other.location.x, other.location.y);
+        }
         sum.add(other.location); // Add location
+
+        PVector loc = PVector.mult(other.location, 1.0);// - getColorDiff(other)*0.5);     // Weight by color
+        sum.add(loc); // Add location
+
         count++;
       }
     }
