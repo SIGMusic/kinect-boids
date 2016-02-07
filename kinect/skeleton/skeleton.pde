@@ -30,6 +30,7 @@ int animationSpeedModulo = 5; // will change frames everytime framecount % speed
 
 void setup() {
   size(800, 600, P3D);
+  surface.setResizable(true);
   //fullScreen();
   frameRate(fps);
   
