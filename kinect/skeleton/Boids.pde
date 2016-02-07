@@ -43,6 +43,8 @@ class Boid implements Comparable<Boid> {
   float blue;
 
   int id;
+  int whichFrame;
+  boolean animationDirectionForward; //used to animated in a smooth manner
 
   // used as a time buffer 
   boolean isColliding;
@@ -63,6 +65,8 @@ class Boid implements Comparable<Boid> {
     maxforce = 0.2;
     this.id = id;
     isColliding = false;
+    whichFrame = int(random(6));
+    animationDirectionForward = true; //
     
     red = 0;
     green = 0;
@@ -128,6 +132,19 @@ class Boid implements Comparable<Boid> {
     location.add(velocity);
     // Reset accelertion to 0 each cycle
     acceleration.mult(0);
+    
+    // tells us which frame to draw for animating a boid
+    if(frameCount % animationSpeedModulo == 0) { 
+      if(animationDirectionForward) { whichFrame++; }
+      else { whichFrame--; }
+    }
+    
+    if (whichFrame >= 5) {
+       animationDirectionForward = false;
+    }
+    if (whichFrame <= 0) {
+       animationDirectionForward = true; 
+    }
   }
 
   // A method that calculates and applies a steering force towards a target
@@ -159,10 +176,42 @@ class Boid implements Comparable<Boid> {
     pushMatrix();
     translate(location.x, location.y);
     rotate(theta);
-    beginShape(TRIANGLES);
-    vertex(0, -r*2);
-    vertex(-r, r*2);
-    vertex(r, r*2);
+    beginShape(TRIANGLE);
+    
+    switch(whichFrame){
+      case 0:
+        vertex(0, 0);
+        vertex(-r, -r/8);
+        vertex(r, -r/8);
+        break;
+      case 1:
+        vertex(0, 0);
+        vertex(-r, -r/16);
+        vertex(r, -r/16);
+        break;
+      case 2:
+        vertex(0, 0);
+        vertex(-r, r/8);
+        vertex(r, r/8);
+        break;
+      case 3:
+        vertex(0, 0);
+        vertex(-r, r/4);
+        vertex(r, r/4);
+        break;
+      case 4:
+        vertex(0, 0);
+        vertex(-r, r/2);
+        vertex(r, r/2);   
+        break;
+      case 5:
+        vertex(0, 0);
+        vertex(-r, r);
+        vertex(r, r);      
+        break;
+    }
+    
+    
     endShape();
     popMatrix();
   }
