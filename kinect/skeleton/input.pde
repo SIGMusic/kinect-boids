@@ -14,7 +14,19 @@ class Input{
        
        float linelen = dist(x1, y1, x2, y2);
       
+        // send the length of the string
        msg.add(linelen);
+       
+       // send radius
+       msg.add(b.r);
+       
+       
+       // send colors
+       msg.add(b.red);
+       msg.add(b.green);
+       msg.add(b.blue);
+       
+       
        sendOSCMessage(msg);
     }
   }

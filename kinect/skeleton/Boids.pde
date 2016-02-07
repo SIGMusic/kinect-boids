@@ -48,6 +48,9 @@ class Boid implements Comparable<Boid> {
 
   // used as a time buffer 
   boolean isColliding;
+  
+  // used for comparison
+  float x1, y1, x2, y2;
 
   Boid(float x, float y, int id, int r) {
     acceleration = new PVector(0, 0);
@@ -81,9 +84,14 @@ class Boid implements Comparable<Boid> {
   
   @Override
   public int compareTo(Boid b) {
-    if (location.x > b.location.x){return 1;}
-    if (location.x < b.location.x){return -1;}
-    return 0;
+    return (int)((y2-y1)*(location.y-b.location.y)+(x2-x1)*(location.x-b.location.x)); //<>//
+  }
+  
+  public void compareInit(float _x1, float _y1, float _x2, float _y2){
+    x1 = _x1;
+    y1 = _y1;
+    x2 = _x2;
+    y2 = _y2;
   }
 
   void run(ArrayList<Boid> boids) {
@@ -176,43 +184,14 @@ class Boid implements Comparable<Boid> {
     pushMatrix();
     translate(location.x, location.y);
     rotate(theta);
-    beginShape(TRIANGLE);
-    
-    switch(whichFrame){
-      case 0:
-        vertex(0, 0);
-        vertex(-r, -r/8);
-        vertex(r, -r/8);
-        break;
-      case 1:
-        vertex(0, 0);
-        vertex(-r, -r/16);
-        vertex(r, -r/16);
-        break;
-      case 2:
-        vertex(0, 0);
-        vertex(-r, r/8);
-        vertex(r, r/8);
-        break;
-      case 3:
-        vertex(0, 0);
-        vertex(-r, r/4);
-        vertex(r, r/4);
-        break;
-      case 4:
-        vertex(0, 0);
-        vertex(-r, r/2);
-        vertex(r, r/2);   
-        break;
-      case 5:
-        vertex(0, 0);
-        vertex(-r, r);
-        vertex(r, r);      
-        break;
-    }
-    
-    
-    endShape();
+    beginShape();
+
+    vertex(0, 0);
+    vertex(-r/(6-whichFrame), r);
+    vertex(0, r/1.8);
+    vertex(r/(6-whichFrame), r);  
+     
+    endShape(CLOSE);
     popMatrix();
   }
   
@@ -371,15 +350,19 @@ class Boid implements Comparable<Boid> {
     float tolerance = 1;
     
     if(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance && !isColliding) {
-       isColliding = true;
-       boid_collisions.add(this);
-       return true; 
+      // if first collision determine if clockwise or counter clockwise with respect to the first point
+      if(boid_collisions.isEmpty()){
+        cwCollision = ((x1-x2)*(location.y-y1) < (y1-y2)*(location.x-x1));
+      }
+      isColliding = true;
+      boid_collisions.add(this);
+      return true; 
     }
-    if(!(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance)) {
-       boid_collisions.remove(this);
+    if(!(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance) && isColliding) {
+      boid_collisions.remove(this);
+      isColliding = false;
     }
     
-    isColliding = false;
     return false;
   }
   
