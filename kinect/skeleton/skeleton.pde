@@ -53,6 +53,7 @@ void setup() {
   }
   
   setupOsc();
+  setupTwitter();
   //smooth();
 }
 
