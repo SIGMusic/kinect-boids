@@ -1,7 +1,7 @@
 Current OscMessage formats:
-// uniqueid 
-// (x, y) of collision
-// length of string at collision
-// radius of the boid
-// (r, g, b) of the boid
+// int uniqueid 
+// float (x, y) of collision
+// float length of string at collision
+// float radius of the boid
+// int (r, g, b) of the boid
 /collision id x y linelength radius r g b
