@@ -1,6 +1,9 @@
 # Kinect-Boids
-EOH 2015 project for SIGMusic
+EOH 2015-2016 project for SIGMusic
 
+#### Linked repositories
+  - Lights: https://github.com/SIGMusic/tonal-lightfield
+  - Sound: https://github.com/SIGMusic/boids-sound
 
 ## Idea
 The idea behind this project is to create an exhibit where anyone can walk in and start interacting to create music. 
