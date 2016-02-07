@@ -176,8 +176,14 @@ class Boid implements Comparable<Boid> {
     pushMatrix();
     translate(location.x, location.y);
     rotate(theta);
-    beginShape(TRIANGLE);
+    beginShape();
+    vertex(0, 0);
+    vertex(-r/(6-whichFrame), r);
+    vertex(0, r/1.8);
+    vertex(r/(6-whichFrame), r);  
     
+    /*
+    beginShape(TRIANGLE)
     switch(whichFrame){
       case 0:
         vertex(0, 0);
@@ -210,6 +216,7 @@ class Boid implements Comparable<Boid> {
         vertex(r, r);      
         break;
     }
+    */
     
     
     endShape();

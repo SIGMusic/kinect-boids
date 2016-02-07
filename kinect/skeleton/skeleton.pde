@@ -44,11 +44,11 @@ void setup() {
   int i;
   // Add an initial set of boids into the system
   for (i = 0; i < numSmall; i++) {
-    flock.addBoid(new Boid(width/2, height/2, i, 5));
+    flock.addBoid(new Boid(width/2, height/2, i, 10));
   }
   // Add an initial set of boids into the system
   for (i = numSmall; i < numSmall+numBig; i++) {
-    big_flock.addBoid(new Boid(width/2, height/2, i, 15));
+    big_flock.addBoid(new Boid(width/2, height/2, i, 20));
   }
   
   setupOsc();
