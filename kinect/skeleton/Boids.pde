@@ -176,43 +176,49 @@ class Boid implements Comparable<Boid> {
     pushMatrix();
     translate(location.x, location.y);
     rotate(theta);
-    beginShape(TRIANGLE);
+    beginShape();
     
     switch(whichFrame){
       case 0:
         vertex(0, 0);
         vertex(-r, -r/8);
+        vertex(0, -r/16);
         vertex(r, -r/8);
         break;
       case 1:
         vertex(0, 0);
         vertex(-r, -r/16);
+        vertex(0, -r/32);
         vertex(r, -r/16);
         break;
       case 2:
         vertex(0, 0);
         vertex(-r, r/8);
+        vertex(0, r/16);
         vertex(r, r/8);
         break;
       case 3:
         vertex(0, 0);
         vertex(-r, r/4);
+        vertex(0, r/8);
         vertex(r, r/4);
         break;
       case 4:
         vertex(0, 0);
-        vertex(-r, r/2);
-        vertex(r, r/2);   
+        vertex(-r, r);
+        vertex(0, r/2);
+        vertex(r, r);   
         break;
       case 5:
         vertex(0, 0);
-        vertex(-r, r);
-        vertex(r, r);      
+        vertex(-r, r*2);
+        vertex(0, r);
+        vertex(r, r*2);      
         break;
     }
     
     
-    endShape();
+    endShape(CLOSE);
     popMatrix();
   }
   
