@@ -24,6 +24,9 @@ class KeyboardInput extends Input{
     strokeWeight(2);
     
     // remove if want to use multiple boid collisions
+    for( Boid b : boid_collisions) {
+      b.compareInit(x1, y1, x2, y2);
+    }
     Collections.sort(boid_collisions);
     
     float prev_x = x1;
@@ -42,18 +45,44 @@ class KeyboardInput extends Input{
     
     
     // with curves
-    noFill();
-    beginShape();
-    curveVertex(prev_x, prev_y); // the first control point
-    curveVertex(prev_x, prev_y);
-    if (boid_collisions.size() != 0) {
-      //Boid b = boid_collisions.get(0);
+    ArrayList<Boid> boid_string = new ArrayList<Boid>();
+    if (boid_collisions.size() != 0){
       // this is commented out to only pluck using the first boid that collides
       for( Boid b : boid_collisions) {
         // only draw those that are past the string
-        if((x1-x2)*(b.location.y-y1) < (y1-y2)*(b.location.x-x1)){
-          curveVertex(b.location.x, b.location.y); 
+        if(((prev_x-x2)*(b.location.y-prev_y) > (prev_y-y2)*(b.location.x-prev_x)) == cwCollision){
+          boid_string.add(b);
+          prev_x = b.location.x;
+          prev_y = b.location.y;
         }
+      }
+      prev_x = x2;
+      prev_y = y2;
+      Iterator<Boid> bIt = boid_string.iterator();
+      ListIterator<Boid> nIt;
+      testBoid: while(bIt.hasNext()) {
+        Boid b = bIt.next();
+        nIt = boid_string.listIterator(boid_string.indexOf(b) + 1);
+        while(nIt.hasNext()) {
+          Boid n = nIt.next();
+          if(((prev_x-b.location.x)*(n.location.y-prev_y) > (prev_y-b.location.y)*(n.location.x-prev_x)) == cwCollision){
+            bIt.remove();
+            continue testBoid;
+          }
+        }
+        prev_x = b.location.x;
+        prev_y = b.location.y;
+      }
+    }
+    noFill();
+    beginShape();
+    curveVertex(x1, y1); // the first control point
+    curveVertex(x1, y1);
+    if (boid_string.size() != 0) {
+      // this is commented out to only pluck using the first boid that collides
+      //Boid b = boid_collisions.get(0);
+      for( Boid b : boid_string) {
+        curveVertex(b.location.x, b.location.y);
       }
     }
     curveVertex(x2, y2); 

@@ -48,6 +48,9 @@ class Boid implements Comparable<Boid> {
 
   // used as a time buffer 
   boolean isColliding;
+  
+  // used for comparison
+  float x1, y1, x2, y2;
 
   Boid(float x, float y, int id, int r) {
     acceleration = new PVector(0, 0);
@@ -81,9 +84,14 @@ class Boid implements Comparable<Boid> {
   
   @Override
   public int compareTo(Boid b) {
-    if (location.x > b.location.x){return 1;}
-    if (location.x < b.location.x){return -1;}
-    return 0;
+    return (int)((y2-y1)*(location.y-b.location.y)+(x2-x1)*(location.x-b.location.x)); //<>//
+  }
+  
+  public void compareInit(float _x1, float _y1, float _x2, float _y2){
+    x1 = _x1;
+    y1 = _y1;
+    x2 = _x2;
+    y2 = _y2;
   }
 
   void run(ArrayList<Boid> boids) {
