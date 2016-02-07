@@ -176,6 +176,7 @@ class Boid implements Comparable<Boid> {
     pushMatrix();
     translate(location.x, location.y);
     rotate(theta);
+    
     beginShape();
     vertex(0, 0);
     vertex(-r/(6-whichFrame), r);
@@ -269,7 +270,7 @@ class Boid implements Comparable<Boid> {
   // Method checks for nearby boids and steers away
   PVector separate (ArrayList<Boid> boids) {
     // separation based on size
-    float desiredseparation = 4f*r;
+    float desiredseparation = 4f*(r-5);
     PVector steer = new PVector(0, 0, 0);
     int count = 0;
     // For every boid in the system, check if it's too close
@@ -309,7 +310,7 @@ class Boid implements Comparable<Boid> {
   // Alignment
   // For every nearby boid in the system, calculate the average velocity
   PVector align (ArrayList<Boid> boids) {
-    float neighbordist = 50;
+    float neighbordist = 40;
     PVector sum = new PVector(0, 0);
     int count = 0;
     for (Boid other : boids) {
@@ -341,7 +342,7 @@ class Boid implements Comparable<Boid> {
   // Cohesion
   // For the average location (i.e. center) of all nearby boids, calculate steering vector towards that location
   PVector cohesion (ArrayList<Boid> boids) {
-    float neighbordist = 50;
+    float neighbordist = 40;
     PVector sum = new PVector(0, 0);   // Start with empty vector to accumulate all locations
     int count = 0;
     for (Boid other : boids) {
@@ -355,6 +356,7 @@ class Boid implements Comparable<Boid> {
         sum.add(other.location); // Add location
 
         PVector loc = PVector.mult(other.location, 1.0);// - getColorDiff(other)*0.5);     // Weight by color
+        
         sum.add(loc); // Add location
 
         count++;
