@@ -322,15 +322,19 @@ class Boid implements Comparable<Boid> {
     float tolerance = 1;
     
     if(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance && !isColliding) {
-       isColliding = true;
-       boid_collisions.add(this);
-       return true; 
+      // if first collision determine if clockwise or counter clockwise with respect to the first point
+      if(boid_collisions.isEmpty()){
+        cwCollision = ((x1-x2)*(location.y-y1) < (y1-y2)*(location.x-x1));
+      }
+      isColliding = true;
+      boid_collisions.add(this);
+      return true; 
     }
-    if(!(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance)) {
-       boid_collisions.remove(this);
+    if(!(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance) && isColliding) {
+      boid_collisions.remove(this);
+      isColliding = false;
     }
     
-    isColliding = false;
     return false;
   }
   
