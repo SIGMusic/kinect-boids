@@ -21,6 +21,7 @@ Input input;
 
 boolean showFlockLines;
 ArrayList<Boid> boid_collisions;
+boolean cwCollision;
 
 float zVal = 300;
 float rotX = PI;
