@@ -15,9 +15,13 @@ import KinectPV2.*;
   int numSmall = 100;
   int numBig = 10;
 
+boolean flocking = true;
+
 Flock flock;
 Flock big_flock;
 Input input;
+
+Input keyboard;
 
 boolean showFlockLines;
 ArrayList<Boid> boid_collisions;
@@ -39,7 +43,7 @@ void setup() {
   //fullScreen();
   frameRate(fps);
   
-  //input = new KeyboardInput();
+  keyboard = new KeyboardInput();
   input = new KinectInput(this);
   
   flock = new Flock();
@@ -63,7 +67,7 @@ void setup() {
     clouds.add(new Cloud());
   
   setupOsc();
-  //setupTwitter();
+  setupTwitter();
   //smooth();
 }
 
@@ -92,11 +96,11 @@ void mouseReleased() {
 }
 
 void keyPressed() {
-  input.keyDown(); 
+  keyboard.keyDown(); 
 }
 
 void keyReleased() {
-  input.keyUp(); 
+  keyboard.keyUp(); 
 }
 
 void draw() {
@@ -106,9 +110,10 @@ void draw() {
     c.drawCloud();
 
   input.drawInput();
+  fill(255, 255, 255);
 
-  fill(255, 0, 0);
   text(frameRate, 50, 50);
+  text(curTweet, 50, 100);
   
   PVector loc = new PVector(mouseX, mouseY, 0);
   if (held) {

@@ -14,6 +14,8 @@ void setupOsc() {
   addresses = new ArrayList<NetAddress>();
   addresses.add(new NetAddress("127.0.0.1", 9433));
   addresses.add(new NetAddress("127.0.0.1", 9434));
+  addresses.add(new NetAddress("127.0.0.1", 9435));
+  addresses.add(new NetAddress("127.0.0.1", 9436));
 
   //oscthread.start();
 }
