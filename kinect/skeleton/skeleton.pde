@@ -35,7 +35,8 @@ void setup() {
   //fullScreen();
   frameRate(fps);
   
-  input = new KeyboardInput();//KinectInput(this);
+  //input = new KeyboardInput();
+  input = new KinectInput(this);
   
   flock = new Flock();
   big_flock = new Flock();
@@ -54,7 +55,7 @@ void setup() {
   }
   
   setupOsc();
-  setupTwitter();
+  //setupTwitter();
   //smooth();
 }
 
