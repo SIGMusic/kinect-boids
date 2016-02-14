@@ -2,7 +2,7 @@ import sys
 from simpleOSC import initOSCServer, startOSCServer, closeOSC, setOSCHandler
 
 ip = "127.0.0.1"
-port = 9433
+port = 9434
 
 def run():
 	try:

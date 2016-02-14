@@ -75,7 +75,7 @@ class KinectInput extends Input{
   }
   
   void drawJoint(PVector joint) {
-    strokeWeight(20);
+    strokeWeight(2.0f + joint.z*8);
     point(joint.x, joint.y, joint.z);
   }
   
