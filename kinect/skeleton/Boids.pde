@@ -43,8 +43,9 @@ class Boid implements Comparable<Boid> {
   float blue;
 
   int id;
-  int whichFrame;
-  boolean animationDirectionForward; //used to animated in a smooth manner
+  float whichFrame;
+  float frameOffset;
+  //boolean animationDirectionForward; //used to animated in a smooth manner
 
   // used as a time buffer 
   boolean isColliding;
@@ -68,8 +69,9 @@ class Boid implements Comparable<Boid> {
     maxforce = 0.2;
     this.id = id;
     isColliding = false;
-    whichFrame = int(random(6));
-    animationDirectionForward = true; //
+    //whichFrame = int(random(6));
+    frameOffset = random(10);
+    //animationDirectionForward = true; //
     
     red = 0;
     green = 0;
@@ -142,7 +144,8 @@ class Boid implements Comparable<Boid> {
     acceleration.mult(0);
     
     // tells us which frame to draw for animating a boid
-    if(frameCount % animationSpeedModulo == 0) { 
+    /* Old animation
+    if(frameCount % animationSpeedModulo < 1) { 
       if(animationDirectionForward) { whichFrame++; }
       else { whichFrame--; }
     }
@@ -153,6 +156,11 @@ class Boid implements Comparable<Boid> {
     if (whichFrame <= 0) {
        animationDirectionForward = true; 
     }
+    */
+    
+    whichFrame = (10*frameCount/animationSpeedModulo+frameOffset) % 10.0;
+    if(whichFrame > 5.0)
+      whichFrame = 10.0 - whichFrame;
   }
 
   // A method that calculates and applies a steering force towards a target

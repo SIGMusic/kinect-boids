@@ -27,7 +27,11 @@ float zVal = 300;
 float rotX = PI;
 
 int fps = 60;
-int animationSpeedModulo = 5; // will change frames everytime framecount % speedModulo == 0
+float bpm = 112.0;
+float animationSpeedModulo = fps*60.0/bpm; // will change frames everytime framecount % speedModulo == 0
+
+ArrayList<Cloud> clouds;
+int numClouds = 6;
 
 void setup() {
   size(800, 600, P3D);
@@ -53,6 +57,10 @@ void setup() {
   for (i = numSmall; i < numSmall+numBig; i++) {
     big_flock.addBoid(new Boid(width/2, height/2, i, 20));
   }
+  
+  clouds = new ArrayList<Cloud>();
+  for(int j=0; j<numClouds; j++)
+    clouds.add(new Cloud());
   
   setupOsc();
   //setupTwitter();
@@ -92,7 +100,10 @@ void keyReleased() {
 }
 
 void draw() {
-  background(0);
+  background(0, 30, 80);
+
+  for(Cloud c: clouds)
+    c.drawCloud();
 
   input.drawInput();
 
