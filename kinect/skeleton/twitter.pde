@@ -28,10 +28,10 @@ void setupTwitter() {
   
   // Twitter initialization
   ConfigurationBuilder cb = new ConfigurationBuilder();
-  cb.setOAuthConsumerKey(consumerKey);
-  cb.setOAuthConsumerSecret(consumerSecret);
-  cb.setOAuthAccessToken(accessToken);
-  cb.setOAuthAccessTokenSecret(accessTokenSecret);
+  //cb.setOAuthConsumerKey(consumerKey);
+  //cb.setOAuthConsumerSecret(consumerSecret);
+  //cb.setOAuthAccessToken(accessToken);
+  //cb.setOAuthAccessTokenSecret(accessTokenSecret);
 
   TwitterFactory tf = new TwitterFactory(cb.build());
 

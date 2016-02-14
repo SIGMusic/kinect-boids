@@ -142,7 +142,7 @@ class Boid implements Comparable<Boid> {
     acceleration.mult(0);
     
     // tells us which frame to draw for animating a boid
-    if(frameCount % animationSpeedModulo == 0) { 
+    if(frameCount % animationSpeedModulo < 1) { 
       if(animationDirectionForward) { whichFrame++; }
       else { whichFrame--; }
     }
