@@ -23,8 +23,11 @@ class KinectInput extends Input{
       KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
       if (skeleton.isTracked()) {
         KJoint[] joints = skeleton.getJoints();
-  
-        sendCollisionMsg(b, joints[KinectPV2.JointType_HandTipLeft].getX(), joints[KinectPV2.JointType_HandTipLeft].getY(), joints[KinectPV2.JointType_HandTipRight].getX(), joints[KinectPV2.JointType_HandTipRight].getY());
+        
+        PVector left = convertToScreenCoord(joints[KinectPV2.JointType_HandTipLeft].getX(), joints[KinectPV2.JointType_HandTipLeft].getY(), joints[KinectPV2.JointType_HandTipLeft].getZ());
+        PVector right = convertToScreenCoord(joints[KinectPV2.JointType_HandTipRight].getX(), joints[KinectPV2.JointType_HandTipRight].getY(), joints[KinectPV2.JointType_HandTipRight].getZ());
+        
+        sendCollisionMsg(b, left.x, left.y, right.x, right.y);
       }
     }
   }
@@ -44,84 +47,36 @@ class KinectInput extends Input{
   }
   
   void drawInput() {  
-    pushMatrix();
-    translate(width/2, height/2, 0);
-    scale(zVal);
-    rotateX(rotX);
-  
+
     ArrayList<KSkeleton> skeletonArray =  kinect.getSkeleton3d();
-  
-    //individual JOINTS
+
     for (int i = 0; i < skeletonArray.size(); i++) {
       KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
       if (skeleton.isTracked()) {
         KJoint[] joints = skeleton.getJoints();
   
-        //draw different color for each hand state
-        //drawHandState(joints[KinectPV2.JointType_HandRight]);
-        //drawHandState(joints[KinectPV2.JointType_HandLeft]);
-  
-        //Draw body
+        PVector left = convertToScreenCoord(joints[KinectPV2.JointType_HandTipLeft].getX(), joints[KinectPV2.JointType_HandTipLeft].getY(), joints[KinectPV2.JointType_HandTipLeft].getZ());
+        PVector right = convertToScreenCoord(joints[KinectPV2.JointType_HandTipRight].getX(), joints[KinectPV2.JointType_HandTipRight].getY(), joints[KinectPV2.JointType_HandTipRight].getZ());
+        color(skeleton.getIndexColor());
+        drawString(left.x, left.y, right.x, right.y);
         color col  = skeleton.getIndexColor();
-        stroke(col);
-        drawBody(joints);
+        drawBody(joints, col);
       }
     }
-    
-    popMatrix();
   }
   
   
-  void drawBody(KJoint[] joints) {
-    //drawBone(joints, KinectPV2.JointType_Head, KinectPV2.JointType_Neck);
-    //drawBone(joints, KinectPV2.JointType_Neck, KinectPV2.JointType_SpineShoulder);
-    //drawBone(joints, KinectPV2.JointType_SpineShoulder, KinectPV2.JointType_SpineMid);
+  void drawBody(KJoint[] joints, color col) {
+     PVector left = convertToScreenCoord(joints[KinectPV2.JointType_HandTipLeft].getX(), joints[KinectPV2.JointType_HandTipLeft].getY(), joints[KinectPV2.JointType_HandTipLeft].getZ());
+        PVector right = convertToScreenCoord(joints[KinectPV2.JointType_HandTipRight].getX(), joints[KinectPV2.JointType_HandTipRight].getY(), joints[KinectPV2.JointType_HandTipRight].getZ());
+    color(col);
+    drawJoint(left);
+    drawJoint(right);
+  }
   
-    //drawBone(joints, KinectPV2.JointType_SpineMid, KinectPV2.JointType_SpineBase);
-    //drawBone(joints, KinectPV2.JointType_SpineShoulder, KinectPV2.JointType_ShoulderRight);
-    //drawBone(joints, KinectPV2.JointType_SpineShoulder, KinectPV2.JointType_ShoulderLeft);
-    //drawBone(joints, KinectPV2.JointType_SpineBase, KinectPV2.JointType_HipRight);
-    //drawBone(joints, KinectPV2.JointType_SpineBase, KinectPV2.JointType_HipLeft);
-  
-    //// Right Arm    
-    //drawBone(joints, KinectPV2.JointType_ShoulderRight, KinectPV2.JointType_ElbowRight);
-    //drawBone(joints, KinectPV2.JointType_ElbowRight, KinectPV2.JointType_WristRight);
-    //drawBone(joints, KinectPV2.JointType_WristRight, KinectPV2.JointType_HandRight);
-    //drawBone(joints, KinectPV2.JointType_HandRight, KinectPV2.JointType_HandTipRight);
-    //drawBone(joints, KinectPV2.JointType_WristRight, KinectPV2.JointType_ThumbRight);
-  
-    //// Left Arm
-    //drawBone(joints, KinectPV2.JointType_ShoulderLeft, KinectPV2.JointType_ElbowLeft);
-    //drawBone(joints, KinectPV2.JointType_ElbowLeft, KinectPV2.JointType_WristLeft);
-    //drawBone(joints, KinectPV2.JointType_WristLeft, KinectPV2.JointType_HandLeft);
-    //drawBone(joints, KinectPV2.JointType_HandLeft, KinectPV2.JointType_HandTipLeft);
-    //drawBone(joints, KinectPV2.JointType_WristLeft, KinectPV2.JointType_ThumbLeft);
-  
-    //// Right Leg
-    //drawBone(joints, KinectPV2.JointType_HipRight, KinectPV2.JointType_KneeRight);
-    //drawBone(joints, KinectPV2.JointType_KneeRight, KinectPV2.JointType_AnkleRight);
-    //drawBone(joints, KinectPV2.JointType_AnkleRight, KinectPV2.JointType_FootRight);
-  
-    //// Left Leg
-    //drawBone(joints, KinectPV2.JointType_HipLeft, KinectPV2.JointType_KneeLeft);
-    //drawBone(joints, KinectPV2.JointType_KneeLeft, KinectPV2.JointType_AnkleLeft);
-    //drawBone(joints, KinectPV2.JointType_AnkleLeft, KinectPV2.JointType_FootLeft);
-  
-    drawJoint(joints, KinectPV2.JointType_HandTipLeft);
-    drawJoint(joints, KinectPV2.JointType_HandTipRight);
-    
-    // old line drawing function
-    //drawLine(joints, KinectPV2.JointType_HandTipLeft, KinectPV2.JointType_HandTipRight);
-    drawString(joints[KinectPV2.JointType_HandTipLeft].getX(), joints[KinectPV2.JointType_HandTipLeft].getY(), 
-            joints[KinectPV2.JointType_HandTipRight].getX(), joints[KinectPV2.JointType_HandTipRight].getY());
-    
-    //drawJoint(joints, KinectPV2.JointType_FootLeft);
-    //drawJoint(joints, KinectPV2.JointType_FootRight);
-  
-    //drawJoint(joints, KinectPV2.JointType_ThumbLeft);
-    //drawJoint(joints, KinectPV2.JointType_ThumbRight);
-  
-    //drawJoint(joints, KinectPV2.JointType_Head);
+  void drawJoint(PVector joint) {
+    strokeWeight(20);
+    point(joint.x, joint.y, joint.z);
   }
   
   void drawJoint(KJoint[] joints, int jointType) {
@@ -184,8 +139,8 @@ class KinectInput extends Input{
   // kinect returns from -1, 1, need to convert to width and height
   PVector convertToScreenCoord(float x, float y, float z) {
     PVector result = new PVector(0.0, 0.0, 0.0);
-    float tempWidth = (x+1)/2;
-    float tempHeight = (y + 1)/2;
+    float tempWidth = (x+2)/4;
+    float tempHeight = (y + 2)/4;
     
     result.x = tempWidth * width;
     result.y = (1 - tempHeight) * height;
