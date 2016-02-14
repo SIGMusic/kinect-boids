@@ -39,6 +39,7 @@ class Input{
   void drawString(float x1, float y1, float x2, float y2) {
     stroke(255);
     strokeWeight(2);
+    //strokeWeight(20);
     
     for( Boid b : boid_collisions) {
       b.compareInit(x1, y1, x2, y2);
