@@ -54,7 +54,7 @@ void setup() {
   }
   
   setupOsc();
-  setupTwitter();
+  //setupTwitter();
   //smooth();
 }
 
