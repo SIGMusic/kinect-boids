@@ -24,7 +24,9 @@ class Cloud{
   }
   
   void drawCloud(){
-    frameScale = cloudScale * (0.1 * sin(2*PI*frameCount/animationSpeedModulo/12.0 + animationOffset) + 1);
+    // uncomment if you want static clouds
+    //frameScale = cloudScale;
+    frameScale = cloudScale * (0.1 * sin(2*PI*frameCount/animationSpeedModulo/2.0 + animationOffset) + 1);
   
     updatePos();
     

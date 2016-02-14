@@ -28,8 +28,7 @@ float rotX = PI;
 
 int fps = 60;
 float bpm = 112.0;
-// animation happens 6 times a beat
-float animationSpeedModulo = fps*60.0/bpm/6.0; // will change frames everytime framecount % speedModulo == 0
+float animationSpeedModulo = fps*60.0/bpm; // will change frames everytime framecount % speedModulo == 0
 
 ArrayList<Cloud> clouds;
 int numClouds = 6;
