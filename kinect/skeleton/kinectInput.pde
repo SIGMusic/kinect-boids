@@ -109,7 +109,12 @@ class KinectInput extends Input{
   
     drawJoint(joints, KinectPV2.JointType_HandTipLeft);
     drawJoint(joints, KinectPV2.JointType_HandTipRight);
-    drawLine(joints, KinectPV2.JointType_HandTipLeft, KinectPV2.JointType_HandTipRight);
+    
+    // old line drawing function
+    //drawLine(joints, KinectPV2.JointType_HandTipLeft, KinectPV2.JointType_HandTipRight);
+    drawString(joints[KinectPV2.JointType_HandTipLeft].getX(), joints[KinectPV2.JointType_HandTipLeft].getY(), 
+            joints[KinectPV2.JointType_HandTipRight].getX(), joints[KinectPV2.JointType_HandTipRight].getY());
+    
     //drawJoint(joints, KinectPV2.JointType_FootLeft);
     //drawJoint(joints, KinectPV2.JointType_FootRight);
   
