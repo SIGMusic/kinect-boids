@@ -31,6 +31,9 @@ float bpm = 112.0;
 // animation happens 6 times a beat
 float animationSpeedModulo = fps*60.0/bpm/6.0; // will change frames everytime framecount % speedModulo == 0
 
+ArrayList<Cloud> clouds;
+int numClouds = 6;
+
 void setup() {
   size(800, 600, P3D);
   surface.setResizable(true);
@@ -54,6 +57,10 @@ void setup() {
   for (i = numSmall; i < numSmall+numBig; i++) {
     big_flock.addBoid(new Boid(width/2, height/2, i, 20));
   }
+  
+  clouds = new ArrayList<Cloud>();
+  for(int j=0; j<numClouds; j++)
+    clouds.add(new Cloud());
   
   setupOsc();
   //setupTwitter();
@@ -93,7 +100,10 @@ void keyReleased() {
 }
 
 void draw() {
-  background(0);
+  background(0, 30, 80);
+
+  for(Cloud c: clouds)
+    c.drawCloud();
 
   input.drawInput();
 
