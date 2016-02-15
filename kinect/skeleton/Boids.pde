@@ -43,8 +43,9 @@ class Boid implements Comparable<Boid> {
   float blue;
 
   int id;
-  int whichFrame;
-  boolean animationDirectionForward; //used to animated in a smooth manner
+  float whichFrame;
+  float frameOffset;
+  //boolean animationDirectionForward; //used to animated in a smooth manner
 
   // used as a time buffer 
   boolean isColliding;
@@ -68,8 +69,9 @@ class Boid implements Comparable<Boid> {
     maxforce = 0.2;
     this.id = id;
     isColliding = false;
-    whichFrame = int(random(6));
-    animationDirectionForward = true; //
+    //whichFrame = int(random(6));
+    frameOffset = random(10);
+    //animationDirectionForward = true; //
     
     red = 0;
     green = 0;
@@ -119,8 +121,10 @@ class Boid implements Comparable<Boid> {
   // We accumulate a new acceleration each time based on three rules
   void flock(ArrayList<Boid> boids) {
     PVector sep = separate(boids);   // Separation
-    PVector ali = align(boids);      // Alignment
     PVector coh = cohesion(boids);   // Cohesion
+    PVector ali = align(boids);      // Alignment
+    PVector circle = forceTangentToRadius();
+    PVector center = forceToCenter();
     // Arbitrarily weight these forces
     sep.mult(3.0);
     ali.mult(2.0);
@@ -129,6 +133,9 @@ class Boid implements Comparable<Boid> {
     applyForce(sep);
     applyForce(ali);
     applyForce(coh);
+    
+    applyForce(circle);
+    //applyForce(center);
   }
 
   // Method to update location
@@ -142,7 +149,8 @@ class Boid implements Comparable<Boid> {
     acceleration.mult(0);
     
     // tells us which frame to draw for animating a boid
-    if(frameCount % animationSpeedModulo == 0) { 
+    /* Old animation
+    if(frameCount % animationSpeedModulo < 1) { 
       if(animationDirectionForward) { whichFrame++; }
       else { whichFrame--; }
     }
@@ -153,6 +161,11 @@ class Boid implements Comparable<Boid> {
     if (whichFrame <= 0) {
        animationDirectionForward = true; 
     }
+    */
+    
+    whichFrame = (10*frameCount/animationSpeedModulo+frameOffset) % 10.0;
+    if(whichFrame > 5.0)
+      whichFrame = 10.0 - whichFrame;
   }
 
   // A method that calculates and applies a steering force towards a target
@@ -171,6 +184,18 @@ class Boid implements Comparable<Boid> {
     PVector steer = PVector.sub(desired, velocity);
     steer.limit(maxforce);  // Limit to maximum steering force
     return steer;
+  }
+  
+  PVector forceTangentToRadius() {
+   PVector force = new PVector(location.x - width/2, location.y - height/2, 0.0);
+   force.rotate(HALF_PI);  
+   
+   return force.div(dist(location.x, location.y, width/2, height/2));
+  }
+  
+  PVector forceToCenter() {
+   PVector force = new PVector(location.x - width/2, location.y - height/2, 0.0);
+   return force.div(dist(location.x, location.y, width/2, height/2));
   }
 
   void render() {
@@ -322,7 +347,7 @@ class Boid implements Comparable<Boid> {
       if ((d > 0) && (d < neighbordist)) {
         // draw lines to show which boids are in the same flock
         if(showFlockLines){
-          stroke(100, 100);
+          stroke(0, 255 - 255*40/d);
           line(location.x, location.y, other.location.x, other.location.y);
         }
         sum.add(other.location); // Add location

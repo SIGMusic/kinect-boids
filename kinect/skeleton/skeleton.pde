@@ -15,9 +15,13 @@ import KinectPV2.*;
   int numSmall = 100;
   int numBig = 10;
 
+boolean flocking = true;
+
 Flock flock;
 Flock big_flock;
 Input input;
+
+Input keyboard;
 
 boolean showFlockLines;
 ArrayList<Boid> boid_collisions;
@@ -27,7 +31,11 @@ float zVal = 300;
 float rotX = PI;
 
 int fps = 60;
-int animationSpeedModulo = 5; // will change frames everytime framecount % speedModulo == 0
+float bpm = 112.0;
+float animationSpeedModulo = fps*60.0/bpm; // will change frames everytime framecount % speedModulo == 0
+
+ArrayList<Cloud> clouds;
+int numClouds = 6;
 
 void setup() {
   size(800, 600, P3D);
@@ -35,7 +43,8 @@ void setup() {
   //fullScreen();
   frameRate(fps);
   
-  input = new KeyboardInput();//KinectInput(this);
+  keyboard = new KeyboardInput();
+  input = new KinectInput(this);
   
   flock = new Flock();
   big_flock = new Flock();
@@ -52,6 +61,10 @@ void setup() {
   for (i = numSmall; i < numSmall+numBig; i++) {
     big_flock.addBoid(new Boid(width/2, height/2, i, 20));
   }
+  
+  clouds = new ArrayList<Cloud>();
+  for(int j=0; j<numClouds; j++)
+    clouds.add(new Cloud());
   
   setupOsc();
   setupTwitter();
@@ -83,20 +96,24 @@ void mouseReleased() {
 }
 
 void keyPressed() {
-  input.keyDown(); 
+  keyboard.keyDown(); 
 }
 
 void keyReleased() {
-  input.keyUp(); 
+  keyboard.keyUp(); 
 }
 
 void draw() {
-  background(0);
+  background(0, 30, 80);
+
+  for(Cloud c: clouds)
+    c.drawCloud();
 
   input.drawInput();
+  fill(255, 255, 255);
 
-  fill(255, 0, 0);
   text(frameRate, 50, 50);
+  text(curTweet, 50, 100);
   
   PVector loc = new PVector(mouseX, mouseY, 0);
   if (held) {

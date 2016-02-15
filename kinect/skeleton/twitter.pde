@@ -12,83 +12,104 @@ import twitter4j.api.*;
 
 import java.util.*;
 
-HashMap seenTweets;
+ArrayList<Status> seenTweets;
+LinkedList<Status> tweetQueue;
 
 Twitter twitter;
 List<Status> tweets;
-String searchQuery = "@sigmusicuiuc";
-String prevTweet = "";
+String searchQuery = "sigmusic eoh";
+String curTweet = "";
+
 
 // update delay in seconds
-int updateDelay = 10;
+int queueDelay = 5;
+
+// twitter update delay in order to avoid rate limiting
+int twitterDelay = 60;
 
 void setupTwitter() {
-  // setting up being able to only accept new tweets
-  seenTweets = new HashMap();
-  
-  // Twitter initialization
-  ConfigurationBuilder cb = new ConfigurationBuilder();
-  cb.setOAuthConsumerKey(consumerKey);
-  cb.setOAuthConsumerSecret(consumerSecret);
-  cb.setOAuthAccessToken(accessToken);
-  cb.setOAuthAccessTokenSecret(accessTokenSecret);
+ // setting up being able to only accept new tweets
+ seenTweets = new ArrayList<Status>();
+ tweetQueue = new LinkedList<Status>();
+ 
+ // Twitter initialization
+ ConfigurationBuilder cb = new ConfigurationBuilder();
+ cb.setOAuthConsumerKey(consumerKey);
+ cb.setOAuthConsumerSecret(consumerSecret);
+ cb.setOAuthAccessToken(accessToken);
+ cb.setOAuthAccessTokenSecret(accessTokenSecret);
 
-  TwitterFactory tf = new TwitterFactory(cb.build());
+ TwitterFactory tf = new TwitterFactory(cb.build());
 
-  twitter = tf.getInstance(); 
-  
-  getNewTweets(searchQuery);
-  
-  
-   
-  // starts a thread that constantly refreshes the tweets
-  thread("refreshTweets");
+ twitter = tf.getInstance(); 
+     
+ // starts a thread that constantly refreshes the tweets
+ thread("refreshTweet");
+ thread("queueTweets");
 }
 
 void getNewTweets(String searchString)
 {
-    try
-    {
-        Query query = new Query(searchString);
+   try
+   {
+       Query query = new Query(searchString);
 
-        QueryResult result = twitter.search(query);
+       QueryResult result = twitter.search(query);
 
-        tweets = result.getTweets();
-    }
-    catch (TwitterException te)
-    {
-        System.out.println("Failed to search tweets: " + te.getMessage());
-        System.exit(-1);
-    }
+       tweets = result.getTweets();
+       for (Status s : tweets) {
+         if (!seenTweets.contains(s)) {
+           seenTweets.add(s);
+           tweetQueue.add(s);
+         }
+       }
+   }
+   catch (TwitterException te)
+   {
+       System.out.println("Failed to search tweets: " + te.getMessage());
+       System.exit(-1);
+   }
 }
 
-void refreshTweets()
+void queueTweets() {
+  while(true) { 
+    getNewTweets(searchQuery); 
+    sendOSCTwitter(curTweet);
+    try{
+      Thread.sleep(twitterDelay * 1000);
+    }
+    catch(InterruptedException ex) {
+      Thread.currentThread().interrupt();
+    }
+  }
+}
+
+void refreshTweet()
 {
-    while (true)
-    {
-        getNewTweets(searchQuery);
-        try {
-          println("array length:" + tweets.size());
-          Status status = tweets.get(0);
-          String curTweet = status.getText();
-          if (!curTweet.equals(prevTweet))
-          {
-            // a tweet was found
-            prevTweet = status.getText();
-            println(curTweet);
-          }
+   while (true)
+   {
+       // pops from front of queue
+       try {
+         curTweet = tweetQueue.pop().getText();
+         
+       }
+       catch(Exception e) {
+         System.out.println("No Tweets found");
+       }
+       
+       
+       try{
+          Thread.sleep(queueDelay * 1000);
         }
-        catch(Exception e) {
-          System.out.println("No Tweets found");
+        catch(InterruptedException ex) {
+          Thread.currentThread().interrupt();
         }
-        println("Updated Tweets");
-
-        delay(updateDelay * 1000);
-    }
+   }
 }
 
-void sendOSCTwitter() {
-  // do stuff
-  OscMessage msg = new OscMessage("/twitter");     
-  sendOSCMessage(msg);
+void sendOSCTwitter(String tweet) {
+ // do stuff
+ OscMessage msg = new OscMessage("/twitter"); 
+ msg.add(tweet.length());
+ sendOSCMessage(msg);
 }
