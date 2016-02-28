@@ -11,7 +11,8 @@ class Flock {
     for (Boid b : boids) {
       b.run(boids);  // Passing the entire list of boids to each boid individually
       
-      input.collision(b);
+      //input.collision(b);
+      keyboard.collision(b);
     }
   }
 
@@ -86,7 +87,7 @@ class Boid implements Comparable<Boid> {
     }
   }
   
-  @Override //<>//
+  @Override //<>// //<>//
   public int compareTo(Boid b) {
     return (int)((y2-y1)*(location.y-b.location.y)+(x2-x1)*(location.x-b.location.x));
   }
@@ -135,9 +136,10 @@ class Boid implements Comparable<Boid> {
     applyForce(sep);
     applyForce(ali);
     applyForce(coh);
-    
-    applyForce(circle);
-    applyForce(center);
+    if (circleFlocking) {
+      applyForce(circle);
+    }
+    //applyForce(center);
   }
 
   // Method to update location
@@ -190,6 +192,7 @@ class Boid implements Comparable<Boid> {
   
   PVector forceTangentToRadius() {
    PVector force = new PVector(location.x - width/2, location.y - height/2, 0.0);
+   force.mult(5);
    force.rotate(HALF_PI);  
    
    return force.div(dist(location.x, location.y, width/2, height/2));

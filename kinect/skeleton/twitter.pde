@@ -12,6 +12,11 @@ import twitter4j.api.*;
 
 import java.util.*;
 
+String consumerKey = "";
+String consumerSecret = "";
+String accessToken = "";
+String accessTokenSecret = "";
+
 ArrayList<Status> seenTweets;
 LinkedList<Status> tweetQueue;
 
@@ -33,6 +38,7 @@ void setupTwitter() {
  tweetQueue = new LinkedList<Status>();
  
  // Twitter initialization
+ try {
  ConfigurationBuilder cb = new ConfigurationBuilder();
  cb.setOAuthConsumerKey(consumerKey);
  cb.setOAuthConsumerSecret(consumerSecret);
@@ -42,6 +48,9 @@ void setupTwitter() {
  TwitterFactory tf = new TwitterFactory(cb.build());
 
  twitter = tf.getInstance(); 
+ } catch(Exception e) {
+   
+ }
      
  // starts a thread that constantly refreshes the tweets
  thread("refreshTweet");
