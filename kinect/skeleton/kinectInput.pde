@@ -19,6 +19,7 @@ class KinectInput extends Input{
   
   void collision(Boid b){
     ArrayList<KSkeleton> skeletonArray =  kinect.getSkeleton3d();
+    resizeBoidCollisions(skeletonArray.size());
     for (int i = 0; i < skeletonArray.size(); i++) {
       KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
       if (skeleton.isTracked()) {
@@ -27,7 +28,7 @@ class KinectInput extends Input{
         PVector left = convertToScreenCoord(joints[KinectPV2.JointType_HandTipLeft].getX(), joints[KinectPV2.JointType_HandTipLeft].getY(), joints[KinectPV2.JointType_HandTipLeft].getZ());
         PVector right = convertToScreenCoord(joints[KinectPV2.JointType_HandTipRight].getX(), joints[KinectPV2.JointType_HandTipRight].getY(), joints[KinectPV2.JointType_HandTipRight].getZ());
         
-        sendCollisionMsg(b, left.x, left.y, right.x, right.y);
+        sendCollisionMsg(b, left.x, left.y, right.x, right.y, i);
       }
     }
   }
@@ -49,7 +50,7 @@ class KinectInput extends Input{
   void drawInput() {  
 
     ArrayList<KSkeleton> skeletonArray =  kinect.getSkeleton3d();
-
+    resizeBoidCollisions(skeletonArray.size());
     for (int i = 0; i < skeletonArray.size(); i++) {
       KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
       if (skeleton.isTracked()) {
@@ -58,7 +59,7 @@ class KinectInput extends Input{
         PVector left = convertToScreenCoord(joints[KinectPV2.JointType_HandTipLeft].getX(), joints[KinectPV2.JointType_HandTipLeft].getY(), joints[KinectPV2.JointType_HandTipLeft].getZ());
         PVector right = convertToScreenCoord(joints[KinectPV2.JointType_HandTipRight].getX(), joints[KinectPV2.JointType_HandTipRight].getY(), joints[KinectPV2.JointType_HandTipRight].getZ());
         color(skeleton.getIndexColor());
-        drawString(left.x, left.y, right.x, right.y);
+        drawString(left.x, left.y, right.x, right.y, i);
         color col  = skeleton.getIndexColor();
         drawBody(joints, col);
       }
@@ -147,5 +148,16 @@ class KinectInput extends Input{
     result.z = z;
     
     return result;
+  }
+  
+  void resizeBoidCollisions(int newSize){
+    int oldSize = boid_collisions.size();
+    if(oldSize < newSize){
+      int diff = newSize - oldSize;
+      for(int i=0; i<diff; i++)
+        boid_collisions.add(new ArrayList<Boid>());
+    }else if(oldSize > newSize){
+      boid_collisions.subList(newSize, oldSize).clear();
+    }
   }
 }
