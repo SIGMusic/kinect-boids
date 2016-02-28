@@ -15,8 +15,6 @@ import KinectPV2.*;
   int numSmall = 100;
   int numBig = 10;
 
-boolean flocking = true;
-
 Flock flock;
 Flock big_flock;
 Input input;
@@ -25,7 +23,7 @@ Input keyboard;
 
 boolean showFlockLines;
 ArrayList<ArrayList<Boid>> boid_collisions;
-boolean cwCollision;
+ArrayList<Boolean> cwCollision;
 
 float zVal = 300;
 float rotX = PI;
@@ -51,7 +49,8 @@ void setup() {
   
   boid_collisions = new ArrayList<ArrayList<Boid>>();
   boid_collisions.add(new ArrayList<Boid>());
-  
+  cwCollision = new ArrayList<Boolean>();
+  cwCollision.add(false);
   
   int i;
   // Add an initial set of boids into the system
