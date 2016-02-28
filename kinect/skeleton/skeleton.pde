@@ -16,6 +16,7 @@ import KinectPV2.*;
   int numBig = 10;
 
 boolean flocking = true;
+boolean useTwitter = false;
 
 Flock flock;
 Flock big_flock;
@@ -68,7 +69,8 @@ void setup() {
     clouds.add(new Cloud());
   
   setupOsc();
-  setupTwitter();
+  if(useTwitter) { setupTwitter(); }
+  
   //smooth();
 }
 
