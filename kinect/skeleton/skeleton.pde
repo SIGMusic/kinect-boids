@@ -24,7 +24,7 @@ Input input;
 Input keyboard;
 
 boolean showFlockLines;
-ArrayList<Boid> boid_collisions;
+ArrayList<ArrayList<Boid>> boid_collisions;
 boolean cwCollision;
 
 float zVal = 300;
@@ -49,7 +49,8 @@ void setup() {
   flock = new Flock();
   big_flock = new Flock();
   
-  boid_collisions = new ArrayList<Boid>();
+  boid_collisions = new ArrayList<ArrayList<Boid>>();
+  boid_collisions.add(new ArrayList<Boid>());
   
   
   int i;

@@ -3,8 +3,8 @@ class Input{
   
   void collision(Boid b){
   }
-  protected void sendCollisionMsg(Boid b, float x1, float y1, float x2, float y2){
-    boolean collides = b.checkCollision(x1, y1, x2, y2);
+  protected void sendCollisionMsg(Boid b, float x1, float y1, float x2, float y2, int stringID){
+    boolean collides = b.checkCollision(x1, y1, x2, y2, stringID);
     if (collides) {
        OscMessage msg = new OscMessage("/collision");
        msg.add(b.id);
@@ -36,15 +36,15 @@ class Input{
   }
   
   void drawInput() {}
-  void drawString(float x1, float y1, float x2, float y2) {
+  void drawString(float x1, float y1, float x2, float y2, int stringID) {
     stroke(255);
     strokeWeight(2);
     //strokeWeight(20);
     
-    for( Boid b : boid_collisions) {
+    for( Boid b : boid_collisions.get(stringID)) {
       b.compareInit(x1, y1, x2, y2);
     }
-    Collections.sort(boid_collisions);
+    Collections.sort(boid_collisions.get(stringID));
     
     float prev_x = x1;
     float prev_y = y1;
@@ -64,7 +64,7 @@ class Input{
     // with curves
     ArrayList<Boid> boid_string = new ArrayList<Boid>();
     if (boid_collisions.size() != 0){
-      for( Boid b : boid_collisions) {
+      for( Boid b : boid_collisions.get(stringID)) {
         // only draw those that are past the string
         if(((prev_x-x2)*(b.location.y-prev_y) > (prev_y-y2)*(b.location.x-prev_x)) == cwCollision){
           boid_string.add(b);
