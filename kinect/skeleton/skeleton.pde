@@ -15,14 +15,18 @@ import KinectPV2.*;
   int numSmall = 100;
   int numBig = 10;
 
-boolean flocking = true;
+boolean circleFlocking = true;
 boolean useTwitter = false;
+boolean showIdle = true;
+
+int numSkeletons = 0;
 
 Flock flock;
 Flock big_flock;
 Input input;
 
 Input keyboard;
+
 
 boolean showFlockLines;
 ArrayList<ArrayList<Boid>> boid_collisions;
@@ -38,6 +42,8 @@ float animationSpeedModulo = fps*60.0/bpm; // will change frames everytime frame
 ArrayList<Cloud> clouds;
 int numClouds = 6;
 
+ArrayList<float[]> hsvValues;
+
 void setup() {
   size(800, 600, P3D);
   surface.setResizable(true);
@@ -45,8 +51,9 @@ void setup() {
   frameRate(fps);
   
   keyboard = new KeyboardInput();
-  input = new KinectInput(this);
-  
+  //input = new KinectInput(this);
+
+  hsvValues = new ArrayList<float[]>();
   flock = new Flock();
   big_flock = new Flock();
   
@@ -111,8 +118,14 @@ void draw() {
 
   for(Cloud c: clouds)
     c.drawCloud();
-
-  input.drawInput();
+  
+  // check if there are no skeletons
+  if (numSkeletons == 0) {
+    keyboard.drawInput();
+  }
+  else {
+    //input.drawInput();
+  }
   fill(255, 255, 255);
 
   text(frameRate, 50, 50);

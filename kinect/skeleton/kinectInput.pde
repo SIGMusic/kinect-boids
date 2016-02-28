@@ -51,6 +51,8 @@ class KinectInput extends Input{
 
     ArrayList<KSkeleton> skeletonArray =  kinect.getSkeleton3d();
     resizeBoidCollisions(skeletonArray.size());
+    numSkeletons = skeletonArray.size();
+    
     for (int i = 0; i < skeletonArray.size(); i++) {
       KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
       if (skeleton.isTracked()) {

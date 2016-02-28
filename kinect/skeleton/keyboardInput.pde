@@ -3,7 +3,7 @@ import java.util.*;
 class KeyboardInput extends Input{
   
   float x1, x2, y1, y2;
-  boolean kW, kA, kS, kD, kQ, kLeft, kRight, kUp, kDown;
+  boolean kW, kA, kS, kD, kQ, kC, kLeft, kRight, kUp, kDown;
   final float vel = 2.0;
   
   KeyboardInput(){
@@ -74,6 +74,9 @@ class KeyboardInput extends Input{
     case 'q':
       kQ = true;
       break;
+    case 'c':
+      kC = true;
+      break;
       
     case CODED:
       switch(keyCode){
@@ -112,6 +115,10 @@ class KeyboardInput extends Input{
     case 'q':
       showFlockLines = !showFlockLines;
       kQ = false;
+      break;
+    case 'c':
+      circleFlocking = !circleFlocking;
+      kC = false;
       break;
       
     case CODED:
