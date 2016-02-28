@@ -126,18 +126,18 @@ class Boid implements Comparable<Boid> {
     PVector coh = cohesion(boids);   // Cohesion
     PVector ali = align(boids);      // Alignment
     PVector circle = forceTangentToRadius();
-    PVector center = forceToCenter();
+    PVector center = forceToCenter().mult(0.1);
     // Arbitrarily weight these forces
-    sep.mult(3.0);
-    ali.mult(2.0);
-    coh.mult(1.0);
+    sep.mult(2.0);
+    ali.mult(1.0);
+    coh.mult(0.5);
     // Add the force vectors to acceleration
     applyForce(sep);
     applyForce(ali);
     applyForce(coh);
     
     applyForce(circle);
-    //applyForce(center);
+    applyForce(center);
   }
 
   // Method to update location
@@ -196,7 +196,7 @@ class Boid implements Comparable<Boid> {
   }
   
   PVector forceToCenter() {
-   PVector force = new PVector(location.x - width/2, location.y - height/2, 0.0);
+   PVector force = new PVector(width/2 - location.x, height/2 - location.y, 0.0);
    return force.div(dist(location.x, location.y, width/2, height/2));
   }
 
@@ -343,7 +343,7 @@ class Boid implements Comparable<Boid> {
   PVector cohesion (ArrayList<Boid> boids) {
     float neighbordist = 40;
     PVector sum = new PVector(0, 0);   // Start with empty vector to accumulate all locations
-    int count = 0;
+    float count = 0;
     for (Boid other : boids) {
       float d = PVector.dist(location, other.location);
       if ((d > 0) && (d < neighbordist)) {
@@ -352,13 +352,12 @@ class Boid implements Comparable<Boid> {
           stroke(0, 255 - 255*40/d);
           line(location.x, location.y, other.location.x, other.location.y);
         }
-        sum.add(other.location); // Add location
-
-        PVector loc = PVector.mult(other.location, 1.0);// - getColorDiff(other)*0.5);     // Weight by color
+        // Weight by color
+        float weight = 0.8 - getColorDiff(other)*0.5;
         
-        sum.add(loc); // Add location
+        sum.add(PVector.mult(other.location, weight)); // Add location
 
-        count++;
+        count+= weight;
       }
     }
     if (count > 0) {

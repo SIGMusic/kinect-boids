@@ -15,8 +15,6 @@ import KinectPV2.*;
   int numSmall = 100;
   int numBig = 10;
 
-boolean flocking = true;
-
 Flock flock;
 Flock big_flock;
 Input input;
