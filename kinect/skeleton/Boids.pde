@@ -48,7 +48,9 @@ class Boid implements Comparable<Boid> {
   //boolean animationDirectionForward; //used to animated in a smooth manner
 
   // used as a time buffer 
-  boolean isColliding;
+  // the stringID of the colliding string
+  // -1 means not colliding
+  int isColliding;
   
   // used for comparison
   float x1, y1, x2, y2;
@@ -68,7 +70,7 @@ class Boid implements Comparable<Boid> {
     maxspeed = 3;
     maxforce = 0.2;
     this.id = id;
-    isColliding = false;
+    isColliding = -1;
     //whichFrame = int(random(6));
     frameOffset = random(10);
     //animationDirectionForward = true; //
@@ -84,9 +86,9 @@ class Boid implements Comparable<Boid> {
     }
   }
   
-  @Override
+  @Override //<>//
   public int compareTo(Boid b) {
-    return (int)((y2-y1)*(location.y-b.location.y)+(x2-x1)*(location.x-b.location.x)); //<>//
+    return (int)((y2-y1)*(location.y-b.location.y)+(x2-x1)*(location.x-b.location.x));
   }
   
   public void compareInit(float _x1, float _y1, float _x2, float _y2){
@@ -376,18 +378,18 @@ class Boid implements Comparable<Boid> {
     
     float tolerance = 1;
     
-    if(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance && !isColliding) {
+    if(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance && isColliding<0) {
       // if first collision determine if clockwise or counter clockwise with respect to the first point
-      if(boid_collisions.isEmpty()){
-        cwCollision = ((x1-x2)*(location.y-y1) < (y1-y2)*(location.x-x1));
+      if(boid_collisions.get(stringID).isEmpty()){
+        cwCollision.set(stringID, ((x1-x2)*(location.y-y1) < (y1-y2)*(location.x-x1)));
       }
-      isColliding = true;
+      isColliding = stringID;
       boid_collisions.get(stringID).add(this);
       return true; 
     }
-    if(!(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance) && isColliding) {
+    if(!(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance) && isColliding==stringID) {
       boid_collisions.get(stringID).remove(this);
-      isColliding = false;
+      isColliding = -1;
     }
     
     return false;

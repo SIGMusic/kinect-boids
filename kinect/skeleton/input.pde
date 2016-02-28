@@ -63,10 +63,10 @@ class Input{
     
     // with curves
     ArrayList<Boid> boid_string = new ArrayList<Boid>();
-    if (boid_collisions.size() != 0){
+    if (boid_collisions.get(stringID).size() != 0){
       for( Boid b : boid_collisions.get(stringID)) {
         // only draw those that are past the string
-        if(((prev_x-x2)*(b.location.y-prev_y) > (prev_y-y2)*(b.location.x-prev_x)) == cwCollision){
+        if(((prev_x-x2)*(b.location.y-prev_y) > (prev_y-y2)*(b.location.x-prev_x)) == cwCollision.get(stringID)){
           boid_string.add(b);
           prev_x = b.location.x;
           prev_y = b.location.y;
@@ -81,7 +81,7 @@ class Input{
         nIt = boid_string.listIterator(boid_string.indexOf(b) + 1);
         while(nIt.hasNext()) {
           Boid n = nIt.next();
-          if(((prev_x-b.location.x)*(n.location.y-prev_y) > (prev_y-b.location.y)*(n.location.x-prev_x)) == cwCollision){
+          if(((prev_x-b.location.x)*(n.location.y-prev_y) > (prev_y-b.location.y)*(n.location.x-prev_x)) == cwCollision.get(stringID)){
             bIt.remove();
             continue testBoid;
           }
