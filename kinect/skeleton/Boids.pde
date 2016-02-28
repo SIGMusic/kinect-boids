@@ -368,7 +368,7 @@ class Boid implements Comparable<Boid> {
     }
   }
   
-  boolean checkCollision(float x1, float y1, float x2, float y2) {
+  boolean checkCollision(float x1, float y1, float x2, float y2, int stringID) {
     float d1 = dist(location.x, location.y, x1, y1);
     float d2 = dist(location.x, location.y, x2, y2);
     
@@ -382,11 +382,11 @@ class Boid implements Comparable<Boid> {
         cwCollision = ((x1-x2)*(location.y-y1) < (y1-y2)*(location.x-x1));
       }
       isColliding = true;
-      boid_collisions.add(this);
+      boid_collisions.get(stringID).add(this);
       return true; 
     }
     if(!(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance) && isColliding) {
-      boid_collisions.remove(this);
+      boid_collisions.get(stringID).remove(this);
       isColliding = false;
     }
     
