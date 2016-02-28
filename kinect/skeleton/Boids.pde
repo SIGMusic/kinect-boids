@@ -49,7 +49,9 @@ class Boid implements Comparable<Boid> {
   //boolean animationDirectionForward; //used to animated in a smooth manner
 
   // used as a time buffer 
-  boolean isColliding;
+  // the stringID of the colliding string
+  // -1 means not colliding
+  int isColliding;
   
   // used for comparison
   float x1, y1, x2, y2;
@@ -69,7 +71,7 @@ class Boid implements Comparable<Boid> {
     maxspeed = 3;
     maxforce = 0.2;
     this.id = id;
-    isColliding = false;
+    isColliding = -1;
     //whichFrame = int(random(6));
     frameOffset = random(10);
     //animationDirectionForward = true; //
@@ -85,9 +87,9 @@ class Boid implements Comparable<Boid> {
     }
   }
   
-  @Override
+  @Override //<>// //<>//
   public int compareTo(Boid b) {
-    return (int)((y2-y1)*(location.y-b.location.y)+(x2-x1)*(location.x-b.location.x)); //<>//
+    return (int)((y2-y1)*(location.y-b.location.y)+(x2-x1)*(location.x-b.location.x));
   }
   
   public void compareInit(float _x1, float _y1, float _x2, float _y2){
@@ -125,11 +127,11 @@ class Boid implements Comparable<Boid> {
     PVector coh = cohesion(boids);   // Cohesion
     PVector ali = align(boids);      // Alignment
     PVector circle = forceTangentToRadius();
-    PVector center = forceToCenter();
+    PVector center = forceToCenter().mult(0.1);
     // Arbitrarily weight these forces
-    sep.mult(3.0);
-    ali.mult(2.0);
-    coh.mult(1.0);
+    sep.mult(2.0);
+    ali.mult(1.0);
+    coh.mult(0.5);
     // Add the force vectors to acceleration
     applyForce(sep);
     applyForce(ali);
@@ -197,7 +199,7 @@ class Boid implements Comparable<Boid> {
   }
   
   PVector forceToCenter() {
-   PVector force = new PVector(location.x - width/2, location.y - height/2, 0.0);
+   PVector force = new PVector(width/2 - location.x, height/2 - location.y, 0.0);
    return force.div(dist(location.x, location.y, width/2, height/2));
   }
 
@@ -344,7 +346,7 @@ class Boid implements Comparable<Boid> {
   PVector cohesion (ArrayList<Boid> boids) {
     float neighbordist = 40;
     PVector sum = new PVector(0, 0);   // Start with empty vector to accumulate all locations
-    int count = 0;
+    float count = 0;
     for (Boid other : boids) {
       float d = PVector.dist(location, other.location);
       if ((d > 0) && (d < neighbordist)) {
@@ -353,13 +355,12 @@ class Boid implements Comparable<Boid> {
           stroke(0, 255 - 255*40/d);
           line(location.x, location.y, other.location.x, other.location.y);
         }
-        sum.add(other.location); // Add location
-
-        PVector loc = PVector.mult(other.location, 1.0);// - getColorDiff(other)*0.5);     // Weight by color
+        // Weight by color
+        float weight = 0.8 - getColorDiff(other)*0.5;
         
-        sum.add(loc); // Add location
+        sum.add(PVector.mult(other.location, weight)); // Add location
 
-        count++;
+        count+= weight;
       }
     }
     if (count > 0) {
@@ -379,18 +380,18 @@ class Boid implements Comparable<Boid> {
     
     float tolerance = 1;
     
-    if(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance && !isColliding) {
+    if(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance && isColliding<0) {
       // if first collision determine if clockwise or counter clockwise with respect to the first point
-      if(boid_collisions.isEmpty()){
-        cwCollision = ((x1-x2)*(location.y-y1) < (y1-y2)*(location.x-x1));
+      if(boid_collisions.get(stringID).isEmpty()){
+        cwCollision.set(stringID, ((x1-x2)*(location.y-y1) < (y1-y2)*(location.x-x1)));
       }
-      isColliding = true;
+      isColliding = stringID;
       boid_collisions.get(stringID).add(this);
       return true; 
     }
-    if(!(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance) && isColliding) {
+    if(!(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance) && isColliding==stringID) {
       boid_collisions.get(stringID).remove(this);
-      isColliding = false;
+      isColliding = -1;
     }
     
     return false;
