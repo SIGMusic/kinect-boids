@@ -26,8 +26,8 @@ class DummyClient(WebSocketClient):
             self.close(reason='Bye bye')
 
 if __name__ == '__main__':
+    # try:
     try:
-        try:
         initOSCServer(ip, port)
 
         setOSCHandler('/collision', col)
@@ -35,7 +35,7 @@ if __name__ == '__main__':
         startOSCServer()
         print "server is running, listening at " + str(ip) + ":" + str(port)
 
-        ws = DummyClient('ws://localhost:9000/', protocols=['http-only', 'chat'])
+        ws = DummyClient('ws://localhost:9000/', protocols=['nlcp'])
         ws.connect()
         ws.run_forever()
     except KeyboardInterrupt:

@@ -12,7 +12,7 @@ import KinectPV2.KJoint;
 import KinectPV2.*;
 
 // Set the number of each size we want
-  int numSmall = 100;
+  int numSmall = 600;
   int numBig = 10;
 
 boolean circleFlocking = true;
@@ -116,6 +116,8 @@ void keyReleased() {
 
 void draw() {
   background(0, 30, 80);
+  float[] hsvBackground = getBackground();
+  //background(Color.HSBtoRGB(hsvBackground[0], hsvBackground[1], hsvBackground[2]));
 
   for(Cloud c: clouds)
     c.drawCloud();
