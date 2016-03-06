@@ -150,7 +150,7 @@ class KinectInput extends Input{
     float tempHeight = (y + 2)/4;
     
     result.x = tempWidth * width;
-    result.y = (1 - tempHeight) * height;
+    result.y = (1 - tempHeight) * height*2 - height/4;
     result.z = z;
     
     return result;
