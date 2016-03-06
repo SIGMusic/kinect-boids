@@ -14,10 +14,13 @@ class KeyboardInput extends Input{
   }
   
   void collision(Boid b){
+    resizeBoidCollisions(1);
     sendCollisionMsg(b, x1, y1, x2, y2, 0);
   }
   
   void drawInput() {
+    resizeBoidCollisions(1);
+    
     updatePos();
     
     drawString(x1, y1, x2, y2, 0);
