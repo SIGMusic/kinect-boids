@@ -388,6 +388,7 @@ class Boid implements Comparable<Boid> {
       isColliding = stringID;
       boid_collisions.get(stringID).add(this);
       
+      // convert boid color to hsv and then add to the queue
       float[] hsv = new float[3];
       Color.RGBtoHSB(int(red), int(green), int(blue), hsv);
       hsvValues.add(hsv);
