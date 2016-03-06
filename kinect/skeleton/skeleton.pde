@@ -23,9 +23,11 @@ int numSkeletons = 0;
 
 Flock flock;
 Flock big_flock;
-Input input;
 
+Input kinectIn;
 Input keyboard;
+Input autoIn;
+Input input;
 
 
 boolean showFlockLines;
@@ -51,7 +53,8 @@ void setup() {
   frameRate(fps);
   
   keyboard = new KeyboardInput();
-  //input = new KinectInput(this);
+  autoIn = new AutoInput();
+  kinectIn = new KinectInput(this);
 
   hsvValues = new ArrayList<float[]>();
   flock = new Flock();
@@ -123,12 +126,9 @@ void draw() {
     c.drawCloud();
   
   // check if there are no skeletons
-  if (numSkeletons == 0) {
-    keyboard.drawInput();
-  }
-  else {
-    //input.drawInput();
-  }
+  // needs to happen before running the flocks
+  input = (!kinectIn.kinected() || numSkeletons == 0)? autoIn: kinectIn;
+  
   fill(255, 255, 255);
 
   text(frameRate, 50, 50);
@@ -142,4 +142,6 @@ void draw() {
   
   flock.run();
   big_flock.run();
+  
+  input.drawInput();
 }
