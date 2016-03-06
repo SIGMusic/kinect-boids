@@ -1,5 +1,5 @@
 // The Flock (a list of Boid objects)
-
+import java.awt.Color;
 class Flock {
   ArrayList<Boid> boids; // An ArrayList for all the boids
 
@@ -11,7 +11,8 @@ class Flock {
     for (Boid b : boids) {
       b.run(boids);  // Passing the entire list of boids to each boid individually
       
-      input.collision(b);
+      //input.collision(b);
+      keyboard.collision(b);
     }
   }
 
@@ -86,7 +87,7 @@ class Boid implements Comparable<Boid> {
     }
   }
   
-  @Override //<>//
+  @Override //<>// //<>//
   public int compareTo(Boid b) {
     return (int)((y2-y1)*(location.y-b.location.y)+(x2-x1)*(location.x-b.location.x));
   }
@@ -135,9 +136,10 @@ class Boid implements Comparable<Boid> {
     applyForce(sep);
     applyForce(ali);
     applyForce(coh);
-    
-    applyForce(circle);
-    applyForce(center);
+    if (circleFlocking) {
+      applyForce(circle);
+    }
+    //applyForce(center);
   }
 
   // Method to update location
@@ -190,6 +192,7 @@ class Boid implements Comparable<Boid> {
   
   PVector forceTangentToRadius() {
    PVector force = new PVector(location.x - width/2, location.y - height/2, 0.0);
+   force.mult(5);
    force.rotate(HALF_PI);  
    
    return force.div(dist(location.x, location.y, width/2, height/2));
@@ -384,6 +387,10 @@ class Boid implements Comparable<Boid> {
       }
       isColliding = stringID;
       boid_collisions.get(stringID).add(this);
+      
+      float[] hsv = new float[3];
+      Color.RGBtoHSB(int(red), int(green), int(blue), hsv);
+      hsvValues.add(hsv);
       return true; 
     }
     if(!(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance) && isColliding==stringID) {
