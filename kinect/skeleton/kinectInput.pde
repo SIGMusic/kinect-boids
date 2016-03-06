@@ -35,6 +35,9 @@ class KinectInput extends Input{
   
    // test if the kinect is connected
   boolean kinected(){
+    numSkeletons = kinect.getSkeleton3d().size();
+    
+    /* currently disabled because I think it lags
     kinect.getColorImage();
     int[] raw = kinect.getRawColor();
     
@@ -45,13 +48,14 @@ class KinectInput extends Input{
         return true;
     }
     return false;
+    */
+    return true;
   }
   
   void drawInput() {  
 
     ArrayList<KSkeleton> skeletonArray =  kinect.getSkeleton3d();
     resizeBoidCollisions(skeletonArray.size());
-    numSkeletons = skeletonArray.size();
     
     for (int i = 0; i < skeletonArray.size(); i++) {
       KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
@@ -150,27 +154,5 @@ class KinectInput extends Input{
     result.z = z;
     
     return result;
-  }
-  
-  void resizeBoidCollisions(int newSize){
-    int oldSize = boid_collisions.size();
-    if(oldSize != newSize){
-      for(ArrayList<Boid> collision_string: boid_collisions){
-        for(Boid b: collision_string){
-          b.isColliding = -1;
-        }
-        collision_string.clear();
-      }
-    }
-    if(oldSize < newSize){
-      int diff = newSize - oldSize;
-      for(int i=0; i<diff; i++){
-        boid_collisions.add(new ArrayList<Boid>());
-        cwCollision.add(false);
-      }
-    }else if(oldSize > newSize){
-      boid_collisions.subList(newSize, oldSize).clear();
-      cwCollision.subList(newSize, oldSize).clear();
-    }
   }
 }
