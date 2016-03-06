@@ -107,4 +107,26 @@ class Input{
   
   void keyDown() {}
   void keyUp() {}
+  
+  void resizeBoidCollisions(int newSize){
+    int oldSize = boid_collisions.size();
+    if(oldSize == newSize)
+      return;
+    for(ArrayList<Boid> collision_string: boid_collisions){
+      for(Boid b: collision_string){
+        b.isColliding = -1;
+      }
+      collision_string.clear();
+    }
+    if(oldSize < newSize){
+      int diff = newSize - oldSize;
+      for(int i=0; i<diff; i++){
+        boid_collisions.add(new ArrayList<Boid>());
+        cwCollision.add(false);
+      }
+    }else if(oldSize > newSize){
+      boid_collisions.subList(newSize, oldSize).clear();
+      cwCollision.subList(newSize, oldSize).clear();
+    }
+  }
 }
