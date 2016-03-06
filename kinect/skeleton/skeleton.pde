@@ -38,7 +38,7 @@ float rotX = PI;
 int fps = 60;
 float bpm = 112.0;
 float animationSpeedModulo = fps*60.0/bpm; // will change frames everytime framecount % speedModulo == 0
-
+float[] curBackground = new float[]{0.0/360.0, 300.0/360.0, 60.0/360.0};
 ArrayList<Cloud> clouds;
 int numClouds = 6;
 
@@ -115,8 +115,10 @@ void keyReleased() {
 }
 
 void draw() {
-  background(0, 30, 80);
-
+  //background(0, 30, 80);
+  //Color backgroundColor = Color.getHSBColor(curBackground[0], curBackground[1], curBackground[2]);
+  //background(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue());
+  switchBackground();
   for(Cloud c: clouds)
     c.drawCloud();
   

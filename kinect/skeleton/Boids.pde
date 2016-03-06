@@ -1,5 +1,5 @@
 // The Flock (a list of Boid objects)
-
+import java.awt.Color;
 class Flock {
   ArrayList<Boid> boids; // An ArrayList for all the boids
 
@@ -387,6 +387,11 @@ class Boid implements Comparable<Boid> {
       }
       isColliding = stringID;
       boid_collisions.get(stringID).add(this);
+      
+      // convert boid color to hsv and then add to the queue
+      float[] hsv = new float[3];
+      Color.RGBtoHSB(int(red), int(green), int(blue), hsv);
+      hsvValues.add(hsv);
       return true; 
     }
     if(!(d1 + d2 >= linelen - tolerance && d1 + d2 <= linelen + tolerance) && isColliding==stringID) {
