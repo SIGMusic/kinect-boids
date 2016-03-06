@@ -146,8 +146,8 @@ class KinectInput extends Input{
   // kinect returns from -1, 1, need to convert to width and height
   PVector convertToScreenCoord(float x, float y, float z) {
     PVector result = new PVector(0.0, 0.0, 0.0);
-    float tempWidth = (x+2)/4;
-    float tempHeight = (y + 2)/4;
+    float tempWidth = (x/1.8 + 1)/2.0;
+    float tempHeight = (y/1.0 +1)/2.0;
     
     result.x = tempWidth * width;
     result.y = (1 - tempHeight) * height*2 - height/4;

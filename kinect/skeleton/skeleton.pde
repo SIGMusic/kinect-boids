@@ -12,7 +12,7 @@ import KinectPV2.KJoint;
 import KinectPV2.*;
 
 // Set the number of each size we want
-  int numSmall = 100;
+  int numSmall = 300;
   int numBig = 10;
 
 boolean circleFlocking = true;
@@ -127,7 +127,7 @@ void draw() {
   
   // check if there are no skeletons
   // needs to happen before running the flocks
-  input = (!kinectIn.kinected() || numSkeletons == 0)? autoIn: kinectIn;
+  input = (!kinectIn.kinected() || numSkeletons == 0)? keyboard: kinectIn;
   
   fill(255, 255, 255);
 
