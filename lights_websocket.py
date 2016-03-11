@@ -13,9 +13,9 @@ class DummyClient(WebSocketClient):
 
         self.send(data_provider())
 
-        for i in range(0, 200, 25):
-            print i
-            self.send("*" * i)
+        # for i in range(0, 10):
+            # print i
+        self.send("010101")
 
     def closed(self, code, reason=None):
         print "Closed down", code, reason
@@ -25,12 +25,18 @@ class DummyClient(WebSocketClient):
         if len(m) == 175:
             self.close(reason='Bye bye')
 
+def bkgrnd(addr, tags, data, source):
+    print "got collision"
+    print data[0]
+    ws.send("010101");
+
+
 if __name__ == '__main__':
     # try:
     try:
         initOSCServer(ip, port)
 
-        setOSCHandler('/collision', col)
+        setOSCHandler('/background', bkgrnd)
 
         startOSCServer()
         print "server is running, listening at " + str(ip) + ":" + str(port)
@@ -38,11 +44,10 @@ if __name__ == '__main__':
         ws = DummyClient('ws://localhost:9000/', protocols=['nlcp'])
         ws.connect()
         ws.run_forever()
+        
     except KeyboardInterrupt:
         ws.close()
         closeOSC()
 
-def col(addr, tags, data, source):
-    print "got collision"
-    print data
+
 
