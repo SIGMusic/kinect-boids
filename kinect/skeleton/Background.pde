@@ -1,6 +1,7 @@
 float CHANGEBY = 1.0;
 float SATURATION = 100.0;
 float BRIGHTNESS = 60.0;
+float LIGHTS_BRIGHTNESS = 100.0;
 float CHANGE_THRESHOLD = 1.0;
 
 float[] getBackground() {
@@ -34,12 +35,13 @@ void switchBackground() {
          curBackground[0] = ((curBackground[0] * 360.0 - CHANGEBY)%360)/360.0; 
       }
   }
-  Color tempColor = Color.getHSBColor(curBackground[0], curBackground[1], curBackground[2]);
+  Color backColor = Color.getHSBColor(curBackground[0], curBackground[1], curBackground[2]);
+  Color lightsColor = Color.getHSBColor(curBackground[0], curBackground[1], LIGHTS_BRIGHTNESS);
 
-  background(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue());
+  background(backColor.getRed(), backColor.getGreen(), backColor.getBlue());
   
   if (frameCount % animationSpeedModulo < 1) {
-    sendBackgroundOSC(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue());
+    sendBackgroundOSC(lightsColor.getRed(), lightsColor.getGreen(), lightsColor.getBlue());
   }
 }
 
