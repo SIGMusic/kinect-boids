@@ -12,7 +12,7 @@ import KinectPV2.KJoint;
 import KinectPV2.*;
 
 // Set the number of each size we want
-  int numSmall = 100;
+  int numSmall = 300;
   int numBig = 10;
 
 boolean circleFlocking = true;
@@ -23,10 +23,16 @@ int numSkeletons = 0;
 
 Flock flock;
 Flock big_flock;
+<<<<<<< HEAD
 Flock tweet_flock;
 Input input;
+=======
+>>>>>>> SIGMusic/master
 
+Input kinectIn;
 Input keyboard;
+Input autoIn;
+Input input;
 
 
 boolean showFlockLines;
@@ -53,7 +59,8 @@ void setup() {
   frameRate(fps);
   
   keyboard = new KeyboardInput();
-  //input = new KinectInput(this);
+  autoIn = new AutoInput();
+  kinectIn = new KinectInput(this);
 
   hsvValues = new ArrayList<float[]>();
   flock = new Flock();
@@ -125,12 +132,9 @@ void draw() {
     c.drawCloud();
   
   // check if there are no skeletons
-  if (numSkeletons == 0) {
-    keyboard.drawInput();
-  }
-  else {
-    //input.drawInput();
-  }
+  // needs to happen before running the flocks
+  input = (!kinectIn.kinected() || numSkeletons == 0)? keyboard: kinectIn;
+  
   fill(255, 255, 255);
 
   text(frameRate, 50, 50);
@@ -144,4 +148,6 @@ void draw() {
   
   flock.run();
   big_flock.run();
+  
+  input.drawInput();
 }

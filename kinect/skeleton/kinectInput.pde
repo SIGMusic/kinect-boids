@@ -35,6 +35,9 @@ class KinectInput extends Input{
   
    // test if the kinect is connected
   boolean kinected(){
+    numSkeletons = kinect.getSkeleton3d().size();
+    
+    /* currently disabled because I think it lags
     kinect.getColorImage();
     int[] raw = kinect.getRawColor();
     
@@ -45,13 +48,14 @@ class KinectInput extends Input{
         return true;
     }
     return false;
+    */
+    return true;
   }
   
   void drawInput() {  
 
     ArrayList<KSkeleton> skeletonArray =  kinect.getSkeleton3d();
     resizeBoidCollisions(skeletonArray.size());
-    numSkeletons = skeletonArray.size();
     
     for (int i = 0; i < skeletonArray.size(); i++) {
       KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
@@ -142,35 +146,13 @@ class KinectInput extends Input{
   // kinect returns from -1, 1, need to convert to width and height
   PVector convertToScreenCoord(float x, float y, float z) {
     PVector result = new PVector(0.0, 0.0, 0.0);
-    float tempWidth = (x+2)/4;
-    float tempHeight = (y + 2)/4;
+    float tempWidth = (x/1.8 + 1)/2.0;
+    float tempHeight = (y/1.0 +1)/2.0;
     
     result.x = tempWidth * width;
-    result.y = (1 - tempHeight) * height;
+    result.y = (1 - tempHeight) * height*2 - height/4;
     result.z = z;
     
     return result;
-  }
-  
-  void resizeBoidCollisions(int newSize){
-    int oldSize = boid_collisions.size();
-    if(oldSize != newSize){
-      for(ArrayList<Boid> collision_string: boid_collisions){
-        for(Boid b: collision_string){
-          b.isColliding = -1;
-        }
-        collision_string.clear();
-      }
-    }
-    if(oldSize < newSize){
-      int diff = newSize - oldSize;
-      for(int i=0; i<diff; i++){
-        boid_collisions.add(new ArrayList<Boid>());
-        cwCollision.add(false);
-      }
-    }else if(oldSize > newSize){
-      boid_collisions.subList(newSize, oldSize).clear();
-      cwCollision.subList(newSize, oldSize).clear();
-    }
   }
 }
