@@ -23,11 +23,7 @@ int numSkeletons = 0;
 
 Flock flock;
 Flock big_flock;
-<<<<<<< HEAD
 Flock tweet_flock;
-Input input;
-=======
->>>>>>> SIGMusic/master
 
 Input kinectIn;
 Input keyboard;
