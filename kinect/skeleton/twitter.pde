@@ -12,10 +12,10 @@ import twitter4j.api.*;
 
 import java.util.*;
 
-String consumerKey = "";
-String consumerSecret = "";
-String accessToken = "";
-String accessTokenSecret = "";
+//String consumerKey = "";
+//String consumerSecret = "";
+//String accessToken = "";
+//String accessTokenSecret = "";
 
 ArrayList<Status> seenTweets;
 LinkedList<Status> tweetQueue;
