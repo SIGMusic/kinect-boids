@@ -23,6 +23,7 @@ int numSkeletons = 0;
 
 Flock flock;
 Flock big_flock;
+Flock tweet_flock;
 Input input;
 
 Input keyboard;
@@ -39,6 +40,7 @@ int fps = 60;
 float bpm = 112.0;
 float animationSpeedModulo = fps*60.0/bpm; // will change frames everytime framecount % speedModulo == 0
 float[] curBackground = new float[]{0.0/360.0, 300.0/360.0, 60.0/360.0};
+Color tempColor;
 ArrayList<Cloud> clouds;
 int numClouds = 6;
 

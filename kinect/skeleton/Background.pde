@@ -32,4 +32,19 @@ void switchBackground() {
   Color tempColor = Color.getHSBColor(curBackground[0], curBackground[1], curBackground[2]);
 
   background(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue());
+  
+  if (frameCount % animationSpeedModulo < 1) {
+    sendBackgroundOSC(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue());
+  }
+}
+
+
+void sendBackgroundOSC(int r, int g, int b) {
+   OscMessage msg = new OscMessage("/background");
+   // send colors
+   msg.add(r);
+   msg.add(g);
+   msg.add(b);
+   
+   sendOSCMessage(msg); 
 }
