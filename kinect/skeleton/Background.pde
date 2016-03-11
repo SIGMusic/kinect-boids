@@ -4,7 +4,7 @@ float BRIGHTNESS = 60.0;
 float LIGHTS_BRIGHTNESS = 100.0;
 float CHANGE_THRESHOLD = 1.0;
 float GAMMA_VALUE = 2.8; 
-
+float RED_GAMMA = 4.0;
 float[] getBackground() {
   while(hsvValues.size() > 10) {
     hsvValues.remove(0);
@@ -50,13 +50,13 @@ void switchBackground() {
 void sendBackgroundOSC(int r, int g, int b) {
    OscMessage msg = new OscMessage("/background");
    // send colors
-   msg.add(gamma(r));
-   msg.add(gamma(g));
-   msg.add(gamma(b));
+   msg.add(gamma(r, RED_GAMMA));
+   msg.add(gamma(g, GAMMA_VALUE));
+   msg.add(gamma(b, GAMMA_VALUE));
    
    sendOSCMessage(msg); 
 }
 
-int gamma(float value) {
-  return (int)(0.5 + 255.0 * pow(value/255.0, GAMMA_VALUE));
+int gamma(float value, float gamma) {
+  return (int)(0.5 + 255.0 * pow(value/255.0, gamma));
 }
